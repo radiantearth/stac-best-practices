@@ -29,15 +29,22 @@ instead of thinking through all the ways providers might have chosen to name it.
 
 ## Field selection and Metadata Linking
 
-In general STAC aims to be oriented around **search**, centered on the core fields that users will want to search on to find 
-imagery. The core is space and time, but there are often other metadata fields that are useful. While the specification is 
-flexible enough that providers can fill it with tens or even hundreds of fields of metadata, that is not recommended. If 
-providers have lots of metadata then that can be linked to in the [Asset Object](https://github.com/radiantearth/stac-spec/blob/master/commons/assets.md#asset-object) 
-(recommended) or in a [Link Object](https://github.com/radiantearth/stac-spec/blob/master/commons/links.md#link-object). There is a lot of metadata that is only of relevance 
+In general STAC aims to be oriented around **search**, centered on the core fields that users will want to search on to find
+data. The core is space and time, but there are often other metadata fields that are useful. While the specification is 
+flexible enough that providers can fill it with tens or even hundreds of fields of metadata, that is not recommended. When
+adding fields ask:
+
+- Does this field help with search and discovery of data?
+- Does this field tell me how to access the data?
+
+If the purpose of the field is solely to provide information that is not contained within the data, consider putting
+that metadata in a an [Asset Object](https://github.com/radiantearth/stac-spec/blob/master/commons/assets.md#asset-object).
+There is a lot of metadata that is only of relevance
 to loading and processing data, and while STAC does not prohibit providers from putting those type of fields in their items, 
-it is not recommended. For very large catalogs (hundreds of millions of records),
-every additional field that is indexed will cost substantial money, so data providers are advised to just put the fields to be searched in STAC and
-[STAC API](https://github.com/radiantearth/stac-api-spec) providers don't have bloated indices that no one actually uses.
+it is not recommended.
+
+For more information on what fields to include and where to include them in the STAC hierarchy, read the 
+[Metadata and Extension Best Practices](best-practices-metadata-and-extensions.md).
 
 ## Datetime selection
 
