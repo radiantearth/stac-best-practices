@@ -9,14 +9,14 @@
 
 ## Common Use Cases of Additional Fields for Assets
 
-As [described in the Item spec](commons/assets.md#additional-fields), it is possible to use fields typically
+As [described in the Item spec](https://github.com/radiantearth/stac-spec/blob/master/commons/assets.md#additional-fields), it is possible to use fields typically
 found in Item properties at the asset level. This mechanism of overriding or providing Item Properties only in the Assets 
 makes discovery more difficult and should generally be avoided. However, there are some core and extension fields for which 
 providing them at the Asset level can prove to be very useful for using the data.
 
 - `datetime`: Provide individual timestamp on an Item, in case the Item has a `start_datetime` and `end_datetime`,
   but an Asset is for one specific time.
-- `gsd` ([Common Metadata](commons/common-metadata.md#instrument)): Specify some assets that represent instruments 
+- `gsd` ([Common Metadata](https://github.com/radiantearth/stac-spec/blob/master/commons/common-metadata.md#instrument)): Specify some assets that represent instruments 
   with different spatial resolution than the overall best resolution. Note this should not be used for different 
   spatial resolutions due to specific processing of assets - look into the [raster 
   extension](https://github.com/stac-extensions/raster) for that use case.
@@ -104,7 +104,7 @@ it. It is relatively easy to [register](https://www.iana.org/form/media-types) a
 
 ## Asset Roles
 
-[Asset roles](commons/assets.md#roles) are used to describe what each asset is used for. They are particular useful 
+[Asset roles](https://github.com/radiantearth/stac-spec/blob/master/commons/assets.md#roles) are used to describe what each asset is used for. They are particular useful 
 when several assets have the same media type, such as when an Item has a multispectral analytic asset, a 3-band full resolution 
 visual asset, a down-sampled preview asset, and a cloud mask asset, all stored as Cloud Optimized GeoTIFF (COG) images. It is 
 recommended to use at least one role for every asset available, and using multiple roles often makes sense. For example you'd use

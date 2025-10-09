@@ -20,7 +20,7 @@
 
 
 *Note: This section uses the term 'Catalog' (with an uppercase C) to refer to the JSON entity specified in the 
-[Catalog spec](catalog-spec/catalog-spec.md), and 'catalog' (with a lowercase c) to refer to any full STAC implementation, 
+[Catalog spec](https://github.com/radiantearth/stac-spec/blob/master/catalog-spec/catalog-spec.md), and 'catalog' (with a lowercase c) to refer to any full STAC implementation, 
 which can be any mix of Catalogs, Collections, and Items.*
 
 ## Static and Dynamic Catalogs
@@ -133,7 +133,7 @@ STAC version. Otherwise some behaviour of functionality may be unpredictable (e.
 
 ## Using Summaries in Collections
 
-One of the strongest recommendations for STAC is to always provide [summaries](collection-spec/collection-spec.md#summaries) in
+One of the strongest recommendations for STAC is to always provide [summaries](https://github.com/radiantearth/stac-spec/blob/master/collection-spec/collection-spec.md#summaries) in
 your Collections. The core team decided to not require them, in case there are future situations where providing a summary
 is too difficult. The idea behind them is not to exhaustively summarize every single field in the Collection, but to provide
 a bit of a 'curated' view. 
@@ -148,9 +148,9 @@ while a value of 15 to 40 would tell them that it's oblique imagery, or 0 to 60 
 a Collection with lots of different look angles. 
 
 - Fields that have only one or a handful of values are also great to summarize. Collections with a single satellite may
-use a single [`gsd`](commons/common-metadata.md#instrument) field in the summary, and it's quite useful for users to know
+use a single [`gsd`](https://github.com/radiantearth/stac-spec/blob/master/commons/common-metadata.md#instrument) field in the summary, and it's quite useful for users to know
 that all data is going to be the same resolution. Similarly it's useful to know the names of all the 
-[`platform` values](commons/common-metadata.md#instrument) that are used in the Collection. 
+[`platform` values](https://github.com/radiantearth/stac-spec/blob/master/commons/common-metadata.md#instrument) that are used in the Collection. 
 
 - It is less useful to summarize fields that have numerous different discrete values that can't easily be represented
 in a range. These will mostly be string values, when there aren't just a handful of options. For example if you had a 
@@ -158,7 +158,7 @@ in a range. These will mostly be string values, when there aren't just a handful
 understand more intuitively where a shot was taken. If your Collection has millions of Items, or even hundreds, you don't want
 to include all the different location string values in a summary. 
 
-- Fields that consist of arrays are more of a judgement call. For example [`instruments`](commons/common-metadata.md#instrument)
+- Fields that consist of arrays are more of a judgement call. For example [`instruments`](https://github.com/radiantearth/stac-spec/blob/master/commons/common-metadata.md#instrument)
 is straightforward and recommended, as the elements of the array are a discrete set of options. On the other hand 
 [`proj:transform`](https://github.com/stac-extensions/projection/blob/main/README.md#projtransform)
 makes no sense to summarize, as the union of all the values
