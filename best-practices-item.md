@@ -100,12 +100,15 @@ use cases.
 
 ## Representing Vector Layers in STAC
 
-Many implementors are tempted to try to use STAC for 'everything', using it as a universal catalog of all their 'stuff'.
-The main route considered is to use STAC to describe vector layers, putting a shapefile or [geopackage](http://geopackage.org)
-as the `asset`. Though there is nothing in the specification that *prevents* this, it is not really the right level of 
-abstraction. A shapefile or geopackage corresponds to a Collection, not a single Item. The ideal thing to do with
-one of those is to serve it with [OGC API - Features](https://github.com/opengeospatial/ogcapi-features) standard. This
-allows each feature in the shapefile/geopackage to be represented online, and enables querying of the actual data. If
-that is not possible then the appropriate way to handle Collection-level search is with the 
-[OGC API - Records](https://github.com/opengeospatial/ogcapi-records) standard, which is a 'brother' specification of STAC API. 
-Both are compliant with OGC API - Features, adding richer search capabilities to enable finding of data. 
+Many implementors are tempted to use STAC to describe vector layers, putting a [geoparquet](https://geoparquet.org/) or 
+[flatgeobuff](https://flatgeobuf.org/) or shapefile or [geopackage](http://geopackage.org)
+file as the asset. This has proven to be useful as long as the asset represents a group of features rather
+than one particular feature. For instance this could be a useful way to distribute a buildings dataset where there is one
+geoparquet file containing all the buildings within each particular region. In that case there would be an item for each region
+and each item would contain an asset pointing to the geoparquet file. Alternatively to distribute a single file that contains
+all the features in a dataset create a collection with one asset at the collection level and no items.
+
+If you want the individual vectors to be accessible individually, the ideal approach
+is to serve it with [OGC API - Features](https://github.com/opengeospatial/ogcapi-features) standard. This
+allows each feature in the dataset (geoparquet, flatgeobuff, shapefile, geopackage, ...) to be represented online, and enables 
+querying of the actual data.
