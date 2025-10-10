@@ -111,4 +111,4 @@ all the features in a dataset create a collection with one asset at the collecti
 If you want the individual vectors to be accessible individually, the ideal approach
 is to serve it with [OGC API - Features](https://github.com/opengeospatial/ogcapi-features) standard. This
 allows each feature in the dataset (geoparquet, flatgeobuff, shapefile, geopackage, ...) to be represented online, and enables 
-querying of the actual data.
+querying of the actual data. This Features API can be referenced within STAC by creating a Link to it at the Collection level.
