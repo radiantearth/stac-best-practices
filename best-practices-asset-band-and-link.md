@@ -91,46 +91,47 @@ it. It is relatively easy to [register](https://www.iana.org/form/media-types) a
 
 ## Asset Roles
 
-[Asset roles](commons/assets.md#roles) are used to describe what each asset is used for. They are particular useful 
-when several assets have the same media type, such as when an Item has a multispectral analytic asset, a 3-band full resolution 
-visual asset, a down-sampled preview asset, and a cloud mask asset, all stored as Cloud Optimized GeoTIFF (COG) images. It is 
-recommended to use at least one role for every asset available, and using multiple roles often makes sense. For example you'd use
-both `data` and `reflectance` if your main data asset is processed to reflectance, or `metadata` and `cloud` for an asset that 
-is a cloud mask, since a mask is considered a form of metadata (it's information about the data). Or if a single asset represents
-several types of 'unusable data' it might include `metadata`, `cloud`, `cloud-shadow` and `snow-ice`. If there is not a clear
-role then just pick a sensible name for the role. You are encouraged to add it to the list below and/or
-in an extension if you think the new role will have broader applicability. 
+[Asset roles](commons/assets.md#roles) are used to describe what each asset is used for. Together with `bands` they provide
+enough information for users to select a specific asset. It is recommended to use at least one role for every asset available, 
+and using multiple roles often makes sense. 
+
+For example consider an item with the following assets all pointing to Cloud Optimized GeoTIFF (COG) images:
+
+- a multispectral analytic asset -> roles: `data`, `analytic`
+- a 3-band full resolution visual asset -> roles: `data`, `visual`
+- a down-sampled preview asset -> roles: `overview`
+- a cloud mask asset -> roles: `cloud`, `metadata`, `mask`
 
 ### List of Asset Roles
 
 There are a number of roles that are commonly used in practice, which we recommend to reuse as much as possible.
-If you can't find suitable roles, feel free to suggest more.
+If you can't find suitable roles, just pick a sensible name and feel free to suggest it here.
 
-| Role Name  | Description                                                                                                                                                                                                                                                                                     |
-| ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| data       | The data itself, excluding the metadata.                                                                                                                                                                                                                                                        |
-| metadata   | Metadata sidecar files describing the data, for example a Landsat-8 MTL file.                                                                                                                                                                                                                   |
-| thumbnail  | An asset that represents a thumbnail of the Item or Collection, typically a RGB or grayscale image primarily for human consumption, low resolution, restricted spatial extent, and displayable in a web browser without scripts or extensions.                                                  |
-| overview   | An asset that represents a more detailed overview of the Item or Collection, typically a RGB or grayscale image primarily for human consumption, medium resolution, full spatial extent, in a file format that's can be visualized easily (e.g., Cloud-Optimized GeoTiff).                      |
-| visual     | An asset that represents a detailed overview of the Item or Collection, typically a RGB or grayscale image primarily for human consumption, high or native resolution (often sharpened), full spatial extent, in a file format that's can be visualized easily (e.g., Cloud-Optimized GeoTiff). |
-| date       | An asset that provides per-pixel acquisition timestamps, typically serving as metadata to another asset                                                                                                                                                                                         |
-| graphic    | Supporting plot, illustration, or graph associated with the Item                                                                                                                                                                                                                                |
-| data-mask  | File indicating if corresponding pixels have Valid data and various types of invalid data                                                                                                                                                                                                       |
-| snow-ice   | Points to a file that indicates whether a pixel is assessed as being snow/ice or not.                                                                                                                                                                                                           |
-| land-water | Points to a file that indicates whether a pixel is assessed as being land or water.                                                                                                                                                                                                             |
-| water-mask | Points to a file that indicates whether a pixel is assessed as being water (e.g. flooding map).                                                                                                                                                                                                 |
-| iso-19115  | Points to an [ISO 19115](https://www.iso.org/standard/53798.html) metadata file                                                                                                                                                                                                                 |
+| Role Name  | Description                                                                                                               |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------- |
+| data       | The data itself.                                                                                                          |
+| metadata   | Metadata sidecar files describing the data, for example a Landsat-8 MTL file.                                             |
+| thumbnail  | Low resolution overview of the data displayable in a web browser without scripts or extensions.                           |
+| overview   | Medium resolution overview of the data, in a file format that's can be visualized easily (e.g., Cloud-Optimized GeoTiff). |
+| visual     | High resolution overview of data, in a file format that's can be visualized easily (e.g., Cloud-Optimized GeoTiff).       |
+| date       | Per-pixel acquisition timestamps, typically serving as metadata to another asset                                          |
+| graphic    | Supporting plot, illustration, or graph associated with the data                                                          |
+| snow-ice   | Per-pixel indicator of snow/ice or not.                                                                                   |
+| land-water | Per-pixel indicator of land or water.                                                                                     |
+| water-mask | Per-pixel indicator of being water (e.g. flooding map).                                                                   |
+| iso-19115  | Points to an [ISO 19115](https://www.iso.org/standard/53798.html) metadata file                                           |
 
 Additional roles are defined in the various extensions, for example:
 
 - [EO Extension](https://github.com/stac-extensions/eo/blob/main/README.md#best-practices)
 - [View Extension](https://github.com/stac-extensions/view/blob/main/README.md#best-practices)
 - [SAR Extension](https://github.com/stac-extensions/sar/blob/main/README.md#best-practices)
+- [Virtual Assets Extension](https://github.com/stac-extensions/virtual-assets/blob/main/README.md#mandatory-role)
 
 The roles `thumbnail`, `overview` and `visual` are very similar. To make choosing the right role easier, please consult the table below.
 
 They should usually be a RGB or grayscale image, which are primarily intended for human consumption, e.g., through a web browser.
-It can complement assets where one band is per file (like Landsat), by providing the key display bands combined,
+They can complement assets where one band is per file (like Landsat), by providing the key display bands combined,
 or can complement assets where many non-visible bands are included, by being a lighter weight file that just has the bands needed for display.
 
 Roles should also be combined, e.g., `thumbnail` and `overview` if the recommendations are all met.
