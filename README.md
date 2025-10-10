@@ -20,7 +20,7 @@ in time some of these may evolve to become part of the core specification.
 
 - [Web Best Practices](best-practices-web.md)
 - [Item Best Practices](best-practices-item.md)
-- [Asset and Link Best Practices](best-practices-asset-and-link.md)
+- [Asset, Band, and Link Best Practices](best-practices-asset-band-and-link.md)
 - [Catalog and Collection Best Practices](best-practices-catalog-and-collection.md)
 - [Metadata and Extension Best Practices](best-practices-metadata-and-extension.md)
 

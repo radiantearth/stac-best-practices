@@ -1,39 +1,26 @@
-# STAC Asset and Link Best Practices
+# STAC Asset, Band, and Link Best Practices
 
 ## Table of Contents
 
-- [Common Use Cases of Additional Fields for Assets](#common-use-cases-of-additional-fields-for-assets)
+- [Additional Fields](#additional-fields)
+- [Asset Keys](#asset-keys)
+- [Titles](#titles)
 - [Working with Media Types](#working-with-media-types)
 - [Asset Roles](#asset-roles)
 - [Bands](#bands)
 
-## Common Use Cases of Additional Fields for Assets
+## Additional Fields
 
 As [described in the Item spec](commons/assets.md#additional-fields), it is possible to use fields typically
-found in Item properties at the asset level. This mechanism of overriding or providing Item Properties only in the Assets 
-makes discovery more difficult and should generally be avoided. However, there are some core and extension fields for which 
-providing them at the Asset level can prove to be very useful for using the data.
+found in Item properties at the Asset level. This mechanism of overriding or providing fields only in the Assets 
+makes discovery more difficult and should generally be avoided. It should only be used when the assets have different
+values for a particular field. Read more about [Metadata and Extension Best Practices](best-practices-metadata-and-extension.md)
 
-- `datetime`: Provide individual timestamp on an Item, in case the Item has a `start_datetime` and `end_datetime`,
-  but an Asset is for one specific time.
-- `gsd` ([Common Metadata](commons/common-metadata.md#instrument)): Specify some assets that represent instruments 
-  with different spatial resolution than the overall best resolution. Note this should not be used for different 
-  spatial resolutions due to specific processing of assets - look into the [raster 
-  extension](https://github.com/stac-extensions/raster) for that use case.
-- `bands` (e.g. in combination with the [EO extension](https://github.com/stac-extensions/eo/)):
-  Provide spectral band information, and order of bands, within an individual asset.
-- `proj:code`/`proj:wkt2`/`proj:projjson` ([projection extension](https://github.com/stac-extensions/projection/)):
-  Specify different projection for some assets. If the projection is different
-  for all assets it should probably not be provided as an Item property. If most assets are one projection, and there is 
-  a single reprojected version (such as a Web Mercator preview image), it is sensible to specify the main projection in the 
-  Item and the alternate projection for the affected asset(s).
-- `proj:shape`/`proj:transform` ([projection extension](https://github.com/stac-extensions/projection/)):
-  If assets have different spatial resolutions and slightly different exact bounding boxes,
-  specify these per asset to indicate the size of the asset in pixels and its exact GeoTransform in the native projection.
-- `sar:polarizations` ([sar extension](https://github.com/stac-extensions/sar)):
-  Provide the polarization content and ordering of a specific asset.
-- `sar:product_type` ([sar extension](https://github.com/stac-extensions/sar)):
-  If mixing multiple product types within a single Item, this can be used to specify the product_type for each asset.
+## Asset Keys
+
+Asset keys do not have any meaning and are meant to be non-descriptive identifiers that are unique within the bounds of the parent
+Item or Collection. It is common to use the same keys within every Item in a Collection but this is merely a convention and
+should not be relied on `roles` and `bands` should be used to communicate the purpose of a particular asset.
 
 ## Titles
 
