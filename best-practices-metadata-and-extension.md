@@ -2,12 +2,10 @@
 
 - [Introduction](#introduction)
 - [General Data Access](#general-data-access)
-  - [Datacubes](#datacubes)
-- [Items](#items)
-- [Assets](#assets)
-  - [Spectral Measurements](#spectral-measurements)
-  - [SAR Measurements](#sar-measurements)
-  - [Other Measurements](#other-measurements)
+- [Spectral Measurements](#spectral-measurements)
+- [SAR Measurements](#sar-measurements)
+- [Datacubes](#datacubes)
+- [Other Measurements](#other-measurements)
 - [Collections](#collections)
 - [Credits](#credits)
 
@@ -20,6 +18,7 @@ The following specifications and extensions are discussed in this document:
 - [Classification Extension v2.x](https://github.com/stac-extensions/classification)
 - [Datacube Extension v2.x](https://github.com/stac-extensions/datacube)
 - [Electro Optical (EO) Extension v2.x](https://github.com/stac-extensions/eo)
+- [Product Extension v1.x](https://github.com/stac-extensions/product)
 - [Projection Extension v2.x](https://github.com/stac-extensions/projection)
 - [Raster Extension v2.x](https://github.com/stac-extensions/raster)
 - [SAR Extension v1.2 (or later 1.x)](https://github.com/stac-extensions/sar)
@@ -30,9 +29,17 @@ The following specifications and extensions are discussed in this document:
 > The recommendations can mostly be backported to other versions of STAC and other versions of extensions (e.g. the use of `proj:epsg` instead of `proj:code`).
 > We recommend to implement the versions below though.
 
+
 All Fields should be provided in the scope that's required for the data without duplicating information.
-For for example, if the data type differs per band, you'd want to provide the data type per band.
+For example, if the data type differs per band, you'd want to provide the data type per band.
 If the data type is the same across all bands, provide the data type per asset.
+If the data type is the same across all assets, provide the data type per item.
+
+Similarly provide the best gsd at the item level, and if any assets have a different spatial
+resolution provide the gsd within those particular assets to override the value inherited from the item.
+
+The same principles apply for collection-level assets. As much as possible metadata should be provided at
+the collection-level
 
 ## General Data Access
 
@@ -53,31 +60,16 @@ Two behavioral extensions are recommended that don't describe the data itself bu
     Note that the Storage Extension is still evolving and has a limited set of cloud stores defined.
     Please open a PR if your cloud store is not available yet.
 
-### Datacubes
-
-If a datacube file format (e.g. netCDF, ZARR, GRIB) is exposed, the following is recommended:
-
-- **Datacube Extension** (v2.x)
-  
-  - For a single variable: `cube:dimensions` only
-  - For multiple variables: `cube:variables` and `cube:dimensions`
-
-## Items
-
-Items should be generated so that each item reflects a specific timestamp that is identified in `datetime`.
+## General fields
 
 - **Common metadata**
-  - `datetime` set to a non-null value
-- **Raster Extension** (v2.x)
-  - `raster:spatial_resolution` (if the item has a single resolution, otherwise in the Asset)
-
-## Assets
-
-Each asset that points to measurements should provide the fields defined below.
-
-- **Common metadata**
-  
-  - `data_type`
+  - `datetime` Provide individual timestamp on an Item, in case the Item has a `start_datetime` and `end_datetime`,
+  but an Asset is for one specific time.
+  - `gsd` ([Common Metadata](commons/common-metadata.md#instrument)): Specify overall best resolution at the item level. Specify at the
+  asset level to represent instruments with different spatial resolutions. Note this should not be used for different 
+  spatial resolutions due to specific processing of assets - look into the [raster 
+  extension](https://github.com/stac-extensions/raster) for that use case.
+  - `data_type` 
   - `nodata` (if applicable)
   - `unit` (if applicable)
   
@@ -87,13 +79,22 @@ Each asset that points to measurements should provide the fields defined below.
   
     `proj:code` can be set to `null` if one of the other two fields is provided.
     `proj:wkt2` and `proj:projjson` should never be set to `null`.
+
+    Typically specified at the Item level. If the projection is different
+    for all assets it should not be provided as an Item property. If most assets are one projection, and there is 
+    a single reprojected version (such as a Web Mercator preview image), it is sensible to specify the main projection in the 
+    Item and the alternate projection for the affected asset(s).
+
   - Two of the following: `proj:shape`, `proj:transform`, `proj:bbox`.
   
-    `proj:bbox` should be omitted if the values match `bbox` property exactly (i.e. if `proj:code` "is a geographic coordinate reference system, using the World Geodetic System 1984 (WGS 84) datum, with longitude and latitude units of decimal degrees" (see [RFC 7946, ch. 4](https://datatracker.ietf.org/doc/html/rfc7946#section-4)).
+    `proj:bbox` should be omitted if the values match `bbox` property exactly (i.e. if `proj:code` "is a geographic coordinate reference system, using the World Geodetic System 1984 (WGS 84) datum, with longitude and latitude units of decimal degrees" (see [RFC 7946, ch. 4](https://datatracker.ietf.org/doc/html/rfc7946#section-4))).
+
+    Typically specified at the Item level. If assets have different spatial resolutions and slightly different exact bounding boxes,
+    specify these per asset to indicate the size of the asset in pixels and its exact GeoTransform in the native projection.
   
 - **Raster Extension** (v2.x)
 
-  - `raster:spatial_resolution` (if multiple resolutions are provided in the item, otherwise specify it in the Item)
+  - `raster:spatial_resolution` (if multiple resolutions are provided in the Asset, otherwise in the Item)
   - `raster:scale`
   - `raster:offset`
 
@@ -107,11 +108,12 @@ Each asset that points to measurements should provide the fields defined below.
   - `classification:classes`
   - `classification:bitfields` (if applicable)
 
-### Spectral Measurements
+## Spectral Measurements
 
 - **Common metadata**
-  
-  - `bands` (in the order as they should appear in the datacube)
+
+  - `bands` (in the order they should appear in concatenated data structure)
+
 - **Electro Optical (EO) Extension** (v2.x)
   
   - `name`
@@ -120,10 +122,38 @@ Each asset that points to measurements should provide the fields defined below.
   - `eo:common_name` (if applicable)
   - `eo:center_wavelength` and `eo:full_width_half_max`
 
-### SAR Measurements
+## SAR Measurements
 
-- **SAR Extension**  (v1.2 or a later non-breaking version)
-  - `sar:polarizations` (in the order as they should appear in the datacube)
+- **[SAR Extension](https://github.com/stac-extensions/sar)**  (v1.2 or a later non-breaking version)
+  - `sar:polarizations` (in the order they should appear in concatenated data structure)
+
+- **[Product Extension](https://github.com/stac-extensions/product)**
+  - `product:type`
+   
+    If mixing multiple product types within a single Item, this can be used to specify per asset.
+
+## Datacubes
+
+Items should contain as much information as possible for the construction of datacubes without
+accessing data referenced by the assets. As such the following information should be provided:
+
+- Exact **spatial and temporal extents** (if not provided through the datacube extension)
+- **Datacube extension** The datacube extension can be used to indicate how to construct the datacube even for non-datacube data. 
+  *Note: Usually only extents can be provided but no specific dimension labels.*
+- **Bands** (`bands`, providing the union of all available bands)
+- **Item Assets** (`item_assets`)
+
+If an asset refers to a datacube file format (e.g. netCDF, ZARR, GRIB), the following is recommended:
+
+- **Datacube Extension** (v2.x)
+  
+  - For a single variable: `cube:dimensions` only
+  - For multiple variables: `cube:variables` and `cube:dimensions`
+
+> [!CAUTION]
+> For Collections containing datacubes, fields (including `bands` or datacube fields) should be provided on the top-level 
+and **not** in summaries. Summaries is reserved for properties summarizing the Item Properties, 
+
 
 ### Other Measurements
 
@@ -132,22 +162,6 @@ Each asset that points to measurements should provide the fields defined below.
 >
 > Generally speaking, users should follow any STAC best practices that exist for their types of measurements.
 > The bands concept of STAC could be reused as well.
-
-## Collections
-
-Collections should contain as much information as possible to allow datacubes to be initiated before the items get loaded. As such the following information should be provided:
-
-- Exact **spatial and temporal extents** (if not provided through the datacube extension)
-- **Datacube extension**
-  
-  The datacube extension can be used to indicate how to construct the datacube even for non-datacube data. 
-  *Note: Usually only extents can be provided but no specific dimension labels.*
-- **Bands** (`bands`, providing the union of all available bands)
-- **Item Assets** (`item_assets`)
-
-
-> [!CAUTION]
-> Unless the properties summarize the Item Properties, the properties (e.g. bands or the datacube fields) should be provided on the top-level and **not** in summaries.
 
 ## Credits
 

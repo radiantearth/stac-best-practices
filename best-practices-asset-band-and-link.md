@@ -1,39 +1,26 @@
-# STAC Asset and Link Best Practices
+# STAC Asset, Band, and Link Best Practices
 
 ## Table of Contents
 
-- [Common Use Cases of Additional Fields for Assets](#common-use-cases-of-additional-fields-for-assets)
+- [Additional Fields](#additional-fields)
+- [Asset Keys](#asset-keys)
+- [Titles](#titles)
 - [Working with Media Types](#working-with-media-types)
 - [Asset Roles](#asset-roles)
 - [Bands](#bands)
 
-## Common Use Cases of Additional Fields for Assets
+## Additional Fields
 
 As [described in the Item spec](commons/assets.md#additional-fields), it is possible to use fields typically
-found in Item properties at the asset level. This mechanism of overriding or providing Item Properties only in the Assets 
-makes discovery more difficult and should generally be avoided. However, there are some core and extension fields for which 
-providing them at the Asset level can prove to be very useful for using the data.
+found in Item properties at the Asset level. This mechanism of overriding or providing fields only in the Assets 
+makes discovery more difficult and should generally be avoided. It should only be used when the assets have different
+values for a particular field. Read more about [Metadata and Extension Best Practices](best-practices-metadata-and-extension.md)
 
-- `datetime`: Provide individual timestamp on an Item, in case the Item has a `start_datetime` and `end_datetime`,
-  but an Asset is for one specific time.
-- `gsd` ([Common Metadata](commons/common-metadata.md#instrument)): Specify some assets that represent instruments 
-  with different spatial resolution than the overall best resolution. Note this should not be used for different 
-  spatial resolutions due to specific processing of assets - look into the [raster 
-  extension](https://github.com/stac-extensions/raster) for that use case.
-- `bands` (e.g. in combination with the [EO extension](https://github.com/stac-extensions/eo/)):
-  Provide spectral band information, and order of bands, within an individual asset.
-- `proj:code`/`proj:wkt2`/`proj:projjson` ([projection extension](https://github.com/stac-extensions/projection/)):
-  Specify different projection for some assets. If the projection is different
-  for all assets it should probably not be provided as an Item property. If most assets are one projection, and there is 
-  a single reprojected version (such as a Web Mercator preview image), it is sensible to specify the main projection in the 
-  Item and the alternate projection for the affected asset(s).
-- `proj:shape`/`proj:transform` ([projection extension](https://github.com/stac-extensions/projection/)):
-  If assets have different spatial resolutions and slightly different exact bounding boxes,
-  specify these per asset to indicate the size of the asset in pixels and its exact GeoTransform in the native projection.
-- `sar:polarizations` ([sar extension](https://github.com/stac-extensions/sar)):
-  Provide the polarization content and ordering of a specific asset.
-- `sar:product_type` ([sar extension](https://github.com/stac-extensions/sar)):
-  If mixing multiple product types within a single Item, this can be used to specify the product_type for each asset.
+## Asset Keys
+
+Asset keys do not have any meaning and are meant to be non-descriptive identifiers that are unique within the bounds of the parent
+Item or Collection. It is common to use the same keys within every Item in a Collection but this is merely a convention and
+should not be relied on `roles` and `bands` should be used to communicate the purpose of a particular asset.
 
 ## Titles
 
@@ -104,46 +91,47 @@ it. It is relatively easy to [register](https://www.iana.org/form/media-types) a
 
 ## Asset Roles
 
-[Asset roles](commons/assets.md#roles) are used to describe what each asset is used for. They are particular useful 
-when several assets have the same media type, such as when an Item has a multispectral analytic asset, a 3-band full resolution 
-visual asset, a down-sampled preview asset, and a cloud mask asset, all stored as Cloud Optimized GeoTIFF (COG) images. It is 
-recommended to use at least one role for every asset available, and using multiple roles often makes sense. For example you'd use
-both `data` and `reflectance` if your main data asset is processed to reflectance, or `metadata` and `cloud` for an asset that 
-is a cloud mask, since a mask is considered a form of metadata (it's information about the data). Or if a single asset represents
-several types of 'unusable data' it might include `metadata`, `cloud`, `cloud-shadow` and `snow-ice`. If there is not a clear
-role then just pick a sensible name for the role. You are encouraged to add it to the list below and/or
-in an extension if you think the new role will have broader applicability. 
+[Asset roles](commons/assets.md#roles) are used to describe what each asset is used for. Together with `bands` they provide
+enough information for users to select a specific asset. It is recommended to use at least one role for every asset available, 
+and using multiple roles often makes sense. 
+
+For example consider an item with the following assets all pointing to Cloud Optimized GeoTIFF (COG) images:
+
+- a multispectral analytic asset -> roles: `data`, `analytic`
+- a 3-band full resolution visual asset -> roles: `data`, `visual`
+- a down-sampled preview asset -> roles: `overview`
+- a cloud mask asset -> roles: `cloud`, `metadata`, `mask`
 
 ### List of Asset Roles
 
 There are a number of roles that are commonly used in practice, which we recommend to reuse as much as possible.
-If you can't find suitable roles, feel free to suggest more.
+If you can't find suitable roles, just pick a sensible name and feel free to suggest it here.
 
-| Role Name  | Description                                                                                                                                                                                                                                                                                     |
-| ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| data       | The data itself, excluding the metadata.                                                                                                                                                                                                                                                        |
-| metadata   | Metadata sidecar files describing the data, for example a Landsat-8 MTL file.                                                                                                                                                                                                                   |
-| thumbnail  | An asset that represents a thumbnail of the Item or Collection, typically a RGB or grayscale image primarily for human consumption, low resolution, restricted spatial extent, and displayable in a web browser without scripts or extensions.                                                  |
-| overview   | An asset that represents a more detailed overview of the Item or Collection, typically a RGB or grayscale image primarily for human consumption, medium resolution, full spatial extent, in a file format that's can be visualized easily (e.g., Cloud-Optimized GeoTiff).                      |
-| visual     | An asset that represents a detailed overview of the Item or Collection, typically a RGB or grayscale image primarily for human consumption, high or native resolution (often sharpened), full spatial extent, in a file format that's can be visualized easily (e.g., Cloud-Optimized GeoTiff). |
-| date       | An asset that provides per-pixel acquisition timestamps, typically serving as metadata to another asset                                                                                                                                                                                         |
-| graphic    | Supporting plot, illustration, or graph associated with the Item                                                                                                                                                                                                                                |
-| data-mask  | File indicating if corresponding pixels have Valid data and various types of invalid data                                                                                                                                                                                                       |
-| snow-ice   | Points to a file that indicates whether a pixel is assessed as being snow/ice or not.                                                                                                                                                                                                           |
-| land-water | Points to a file that indicates whether a pixel is assessed as being land or water.                                                                                                                                                                                                             |
-| water-mask | Points to a file that indicates whether a pixel is assessed as being water (e.g. flooding map).                                                                                                                                                                                                 |
-| iso-19115  | Points to an [ISO 19115](https://www.iso.org/standard/53798.html) metadata file                                                                                                                                                                                                                 |
+| Role Name  | Description                                                                                                               |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------- |
+| data       | The data itself.                                                                                                          |
+| metadata   | Metadata sidecar files describing the data, for example a Landsat-8 MTL file.                                             |
+| thumbnail  | Low resolution overview of the data displayable in a web browser without scripts or extensions.                           |
+| overview   | Medium resolution overview of the data, in a file format that's can be visualized easily (e.g., Cloud-Optimized GeoTiff). |
+| visual     | High resolution overview of data, in a file format that's can be visualized easily (e.g., Cloud-Optimized GeoTiff).       |
+| date       | Per-pixel acquisition timestamps, typically serving as metadata to another asset                                          |
+| graphic    | Supporting plot, illustration, or graph associated with the data                                                          |
+| snow-ice   | Per-pixel indicator of snow/ice or not.                                                                                   |
+| land-water | Per-pixel indicator of land or water.                                                                                     |
+| water-mask | Per-pixel indicator of being water (e.g. flooding map).                                                                   |
+| iso-19115  | Points to an [ISO 19115](https://www.iso.org/standard/53798.html) metadata file                                           |
 
 Additional roles are defined in the various extensions, for example:
 
 - [EO Extension](https://github.com/stac-extensions/eo/blob/main/README.md#best-practices)
 - [View Extension](https://github.com/stac-extensions/view/blob/main/README.md#best-practices)
 - [SAR Extension](https://github.com/stac-extensions/sar/blob/main/README.md#best-practices)
+- [Virtual Assets Extension](https://github.com/stac-extensions/virtual-assets/blob/main/README.md#mandatory-role)
 
 The roles `thumbnail`, `overview` and `visual` are very similar. To make choosing the right role easier, please consult the table below.
 
 They should usually be a RGB or grayscale image, which are primarily intended for human consumption, e.g., through a web browser.
-It can complement assets where one band is per file (like Landsat), by providing the key display bands combined,
+They can complement assets where one band is per file (like Landsat), by providing the key display bands combined,
 or can complement assets where many non-visible bands are included, by being a lighter weight file that just has the bands needed for display.
 
 Roles should also be combined, e.g., `thumbnail` and `overview` if the recommendations are all met.
