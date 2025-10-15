@@ -59,7 +59,7 @@ Key terms:
 
 ### Asset Organization
 
-1. **A Zarr asset SHALL be a group containing one or more arrays**
+1. **A Zarr asset SHALL reference a group containing one or more arrays or groups**
    
    This is equivalent to an xarray Dataset, ensuring that Zarr assets are accessible data containers rather than empty hierarchies.
 
