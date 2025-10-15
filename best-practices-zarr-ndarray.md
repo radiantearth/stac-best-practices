@@ -150,11 +150,6 @@ This follows the pattern established by Cloud Optimized GeoTIFF:
     ```json
     "type": "application/vnd+zarr; version=3; profile=multiscales"
     ```
-  
-    This follows the pattern established by Cloud Optimized GeoTIFF:
-    ```json
-    "type": "image/tiff; application=geotiff; profile=cloud-optimized"
-    ```
 
 ## Required Extensions
 
