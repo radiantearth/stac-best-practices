@@ -393,7 +393,7 @@ s3://bucket/ICON_d3hp003.zarr/
     ├── pr (425, 12288) float32
     ├── tas (425, 12288) float32
     ├── ta (425, 12288, 30) float32  # 3D with pressure levels
-    ├── time (425) datetime64[ns]
+    ├── time (425) int64 # seconds since some reference date
     ├── cell (12288) int32
     └── pressure (30) float32
 ```
