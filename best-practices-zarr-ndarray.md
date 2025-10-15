@@ -433,8 +433,12 @@ s3://bucket/ICON_d3hp003.zarr/
           "type": "spatial",
           "axis": "cell",
           "description": "cell index in HEALPix grid",
-          "extent": [0, 12287],
-          "step": 1,
+      "bbox": [
+        -180.0,
+        -90.0,
+        180.0,
+        90.0
+      ],
           "reference_system": "HEALPix"
         },
         "pressure": {
