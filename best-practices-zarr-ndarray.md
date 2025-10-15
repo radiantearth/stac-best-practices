@@ -124,7 +124,30 @@ This follows the pattern established by Cloud Optimized GeoTIFF:
 ```json
 "type": "image/tiff; application=geotiff; profile=cloud-optimized"
 ```
+### Link Templates
 
+**Link Template Relationship**
+
+[Link Templates](https://github.com/stac-extensions/link-templates/) CAN be used to refer to arrays that are data variables contained by a zarr group that is referenced by an asset:
+
+```json
+  "linkTemplates": [
+    {
+      "rel": "data-variable",
+      "title": "r10m",
+      "uriTemplate": "s3://bucket/path/data.zarr/group/{band}",
+      "variables": {
+        "band": {
+          "description": "...",
+         "type": "string",
+          "enum": [
+            "B02",
+            "B03",
+            "B04",
+          ]
+        }
+      }
+    ]
 ### Metadata Requirements
 
 1. **The datacube extension SHOULD be used to describe variables and dimensions when relevant**
@@ -387,7 +410,7 @@ s3://bucket/ICON_d3hp003.zarr/
     ├── hfls (425, 12288) float32
     ├── pr (425, 12288) float32
     ├── tas (425, 12288) float32
-    ├── ta (425, 12288, 30) float32  # 3D with pressure levels
+    ├── ta (425, 30, 12288) float32  # 3D with pressure levels
     ├── time (425) int64 # seconds since some reference date
     ├── cell (12288) int32
     └── pressure (30) float32
