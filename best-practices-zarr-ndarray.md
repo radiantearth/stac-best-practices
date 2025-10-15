@@ -619,31 +619,3 @@ For hierarchical stores, provide assets at meaningful organizational levels:
 }
 ```
 
-### Multi-Resolution and Pyramid Data
-
-EARLY DRAFT: to be updated with multiscale conventions in Zarr.
-
-For data with multiple resolutions (pyramids), each resolution level should be a separate asset:
-
-```json
-"assets": {
-  "data_level_0": {
-    "href": "s3://bucket/data.zarr/0",
-    "roles": ["data"],
-    "raster:spatial_resolution": 10,
-    "proj:shape": [10980, 10980]
-  },
-  "data_level_1": {
-    "href": "s3://bucket/data.zarr/1",
-    "roles": ["overview"],
-    "raster:spatial_resolution": 20,
-    "proj:shape": [5490, 5490]
-  },
-  "data_level_2": {
-    "href": "s3://bucket/data.zarr/2",
-    "roles": ["overview"],
-    "raster:spatial_resolution": 40,
-    "proj:shape": [2745, 2745]
-  }
-}
-```
