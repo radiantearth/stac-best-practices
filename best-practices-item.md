@@ -32,8 +32,8 @@ instead of thinking through all the ways providers might have chosen to name it.
 In general STAC aims to be oriented around **search**, centered on the core fields that users will want to search on to find 
 imagery. The core is space and time, but there are often other metadata fields that are useful. While the specification is 
 flexible enough that providers can fill it with tens or even hundreds of fields of metadata, that is not recommended. If 
-providers have lots of metadata then that can be linked to in the [Asset Object](commons/assets.md#asset-object) 
-(recommended) or in a [Link Object](commons/links.md#link-object). There is a lot of metadata that is only of relevance 
+providers have lots of metadata then that can be linked to in the [Asset Object](https://github.com/radiantearth/stac-spec/blob/master/commons/assets.md#asset-object) 
+(recommended) or in a [Link Object](https://github.com/radiantearth/stac-spec/blob/master/commons/links.md#link-object). There is a lot of metadata that is only of relevance 
 to loading and processing data, and while STAC does not prohibit providers from putting those type of fields in their items, 
 it is not recommended. For very large catalogs (hundreds of millions of records),
 every additional field that is indexed will cost substantial money, so data providers are advised to just put the fields to be searched in STAC and
@@ -46,7 +46,7 @@ STAC. And it can also be one of the most confusing, especially for data that cov
 is straightforward - it is the capture or acquisition time. But often data is processed from a range of captures - drones usually
 gather a set of images over an hour and put them into a single image, mosaics combine data from several months, and data cubes
 represent slices of data over a range of time. For all these cases the recommended path is to use `start_datetime` and 
-`end_datetime` fields from [common metadata](commons/common-metadata.md#date-and-time-range). The specification does allow one to set the 
+`end_datetime` fields from [common metadata](https://github.com/radiantearth/stac-spec/blob/master/commons/common-metadata.md#date-and-time-range). The specification does allow one to set the 
 `datetime` field to `null`, but it is strongly recommended to populate the single `datetime` field, as that is what many clients 
 will search on. If it is at all possible to pick a nominal or representative datetime then that should be used. But sometimes that 
 is not possible, like a data cube that covers a time range from 1900 to 2000. Setting the datetime as 1950 would lead to it not
@@ -95,7 +95,7 @@ not spatial. This use case is not currently supported by STAC, as we are focused
 in nature. The [OGC API - Records](https://github.com/opengeospatial/ogcapi-records) is an emerging standard that likely
 will be able to handle a wider range of data than STAC. It builds on [OGC API - 
 Features](https://github.com/opengeospatial/ogcapi-features) just like [STAC API](https://github.com/radiantearth/stac-api-spec/)
-does. Using [Collection Assets](collection-spec/collection-spec.md#assets) may also provide an option for some 
+does. Using [Collection Assets](https://github.com/radiantearth/stac-spec/blob/master/collection-spec/collection-spec.md#assets) may also provide an option for some 
 use cases.
 
 ## Representing Vector Layers in STAC
