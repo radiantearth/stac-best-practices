@@ -84,11 +84,10 @@ Key terms:
    
    The appropriate level depends on how users will access the data.
 
-4. **Asset roles SHOULD clearly indicate the type of reference**
+4. **Zarr STAC Extension SHOULD align with Zarr conventions (that are currently being defined) to clearly indicate the data model that best represents the asset**
    
-   - `"store"`: Reference to a complete Zarr store
-   - `"group"`: Reference to a group within the store
-   - `"data"`: Reference to individual data arrays
+   - `"multi-resolution"`: Reference to a multi-resolution datatree
+   - `"single-resolution"`: Reference to a single resolution dataset
 
 ### Link Relationships
 
