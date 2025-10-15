@@ -48,7 +48,7 @@ Key terms:
 - **Chunk**: A contiguous region of an array that is stored as a single object
 - **Consolidated Metadata**: A single metadata document containing the metadata for all arrays and groups in a store
 
-### STAC-Specific Concepts
+### Xarray/NetCDF/CF-Specific Concepts
 
 - **Variable**: A named data array within a Zarr group, typically representing a measured or derived quantity
 - **Dimension**: An axis of a multidimensional array (e.g., x, y, time, band)
