@@ -46,7 +46,7 @@ Key terms:
 - **Group**: A node including the root node in a Zarr hierarchy that can contain arrays and/or other groups
 - **Array**: A multidimensional array with chunked storage
 - **Chunk**: A contiguous region of an array that is stored as a single object
-- **Consolidated Metadata**: A single metadata document containing the metadata for all arrays and groups in a store
+- **Consolidated Metadata**: A single metadata document containing the metadata for all arrays and groups that are children of a given group.
 
 ### Xarray/NetCDF/CF-Specific Concepts
 
