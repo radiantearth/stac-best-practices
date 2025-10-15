@@ -80,7 +80,7 @@ Key terms:
    
    Assets may point to:
    - The root group
-   - Intermediate groups
+   - Sub groups
    - Individual data variables/arrays
    
    The appropriate level depends on how users will access the data.
