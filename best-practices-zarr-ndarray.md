@@ -131,23 +131,26 @@ This follows the pattern established by Cloud Optimized GeoTIFF:
 [Link Templates](https://github.com/stac-extensions/link-templates/) CAN be used to refer to arrays that are data variables contained by a zarr group that is referenced by an asset:
 
 ```json
-  "linkTemplates": [
-    {
-      "rel": "data-variable",
-      "title": "r10m",
-      "uriTemplate": "s3://bucket/path/data.zarr/group/{band}",
-      "variables": {
-        "band": {
-          "description": "...",
-         "type": "string",
-          "enum": [
-            "B02",
-            "B03",
-            "B04",
-          ]
-        }
+"linkTemplates": [
+  {
+    "rel": "data-variable",
+    "title": "r10m",
+    "uriTemplate": "s3://bucket/path/data.zarr/group/{band}",
+    "variables": {
+      "band": {
+        "description": "...",
+        "type": "string",
+        "enum": [
+          "B02",
+          "B03",
+          "B04",
+        ]
       }
-    ]
+    }
+  }
+]
+```
+
 ### Metadata Requirements
 
 1. **The datacube extension SHOULD be used to describe variables and dimensions when relevant**
