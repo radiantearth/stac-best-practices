@@ -61,7 +61,7 @@ Key terms:
 
 1. **A Zarr asset SHALL reference a group containing one or more arrays or groups**
    
-   This is equivalent to an xarray Dataset, ensuring that Zarr assets are accessible data containers rather than empty hierarchies.
+   This is equivalent to an xarray Dataset or an xarray DataTree.
 
 2. **The Zarr store SHOULD be referenced with a link using the `"store"` relationship**
    
