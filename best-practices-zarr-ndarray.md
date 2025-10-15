@@ -209,7 +209,7 @@ For Zarr assets, the following extensions are typically required:
       "data_type": "uint16",
       "nodata": 0,
       "raster:scale": 0.0001,
-      "raster:offset": 0.0,
+      "raster:offset": -0.1,
       "proj:code": "EPSG:32628",
       "proj:shape": [10980, 10980],
       "cube:dimensions": {
