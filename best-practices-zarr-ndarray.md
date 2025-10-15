@@ -562,13 +562,6 @@ s3://bucket/ICON_d3hp003.zarr/
     }
   ],
   "assets": {
-    "reference": {
-      "href": "https://storage.example.com/kerchunk/CMIP6_CESM2_rlus_kr1.0.json",
-      "type": "application/json+zstd",
-      "title": "Kerchunk reference file",
-      "roles": ["reference", "data"],
-      "description": "Virtual Zarr store referencing NetCDF files"
-    },
     "source_data": {
       "href": "https://storage.example.com/data/CMIP6/rlus_day_CESM2-WACCM_ssp585_gn_20150101-20241231.nc",
       "type": "application/netcdf",
@@ -580,9 +573,9 @@ s3://bucket/ICON_d3hp003.zarr/
 ```
 
 **Key Points**:
-- The store link points to the reference file
+
+- The kerchunk reference file is considered as the data store and thus is reference as a link with `rel: store`
 - Assets include both the reference file and source data
-- Media type indicates the reference format (e.g., JSON with zstd compression)
 - Role `"reference"` indicates virtual/indirect data access
 - Role `"source"` indicates the underlying data files
 
