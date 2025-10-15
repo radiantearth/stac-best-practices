@@ -87,6 +87,7 @@ Key terms:
 4. **Band names SHALL BE relative to the asset group and point to an array within that group**
 
     The band name shall be used as a relative path for accessing an array to point to a specific array within the group linked in the asset `href`.
+    Implicitly, the band has the "data" role.
 
 5. **Zarr STAC Extension SHOULD align with Zarr conventions (that are currently being defined) to clearly indicate the data model that best represents the asset**
    
@@ -184,7 +185,7 @@ For Zarr assets, the following extensions are typically required:
 └── quality/
 ```
 
-**STAC Representation**:
+1 big reflectance STAC Representation**
 
 ```json
 {
@@ -203,76 +204,50 @@ For Zarr assets, the following extensions are typically required:
     }
   ],
   "assets": {
-    "measurements_r10m": {
-      "href": "s3://bucket/S2B_MSIL2A_20251006T123309.zarr/measurements/reflectance/r10m",
-      "type": "application/vnd+zarr; version=2",
-      "roles": ["group", "data"],
-      "raster:spatial_resolution": 10,
-      "data_type": "uint16",
-      "nodata": 0,
-      "raster:scale": 0.0001,
-      "raster:offset": -0.1,
-      "proj:code": "EPSG:32628",
-      "proj:shape": [10980, 10980],
-      "cube:dimensions": {
-        "x": {
-          "type": "spatial",
-          "axis": "x",
-          "extent": [300000, 409800]
-        },
-        "y": {
-          "type": "spatial",
-          "axis": "y",
-          "extent": [0, 109800]
+    "reflectance": {
+              "gsd": 10,
+              "href": "https://objects.eodc.eu:443/e05ab01a9d56408d82ac32d69a5aae2a:202510-s02msil2a-eu/14/products/cpm_v256/S2C_MSIL2A_20251014T142151_N0511_R096_T25WET_20251014T161521.zarr/measurements/reflectance/",
+              "type": "application/vnd+zarr",
+              "bands": [       
+                  {"name": "r20m/B01", "common_name": "coastal", "description": "Coastal aerosol (band 1)", "center_wavelength": 0.443, "full_width_half_max": 0.027,   },
+                  {"name": "r10m/B02", "common_name": "blue", "description": "Blue (band 2)", "center_wavelength": 0.49, "full_width_half_max": 0.098},
+                  {"name": "r10m/B03", "common_name": "green", "description": "Green (band 3)", "center_wavelength": 0.56, "full_width_half_max": 0.045},
+                  {"name": "r10m/B04", "common_name": "red", "description": "Red (band 4)", "center_wavelength": 0.665, "full_width_half_max": 0.038},
+                  {"name": "r20m/B05", "common_name": "rededge", "description": "Red edge 1 (band 5)", "center_wavelength": 0.704, "full_width_half_max": 0.019},
+                  {"name": "r20m/B06", "common_name": "rededge", "description": "Red edge 2 (band 6)", "center_wavelength": 0.74, "full_width_half_max": 0.018},
+                  {"name": "r20m/B07", "common_name": "rededge", "description": "Red edge 3 (band 7)", "center_wavelength": 0.783, "full_width_half_max": 0.028},
+                  {"name": "r20m/B8A", "common_name": "nir08", "description": "NIR 2 (band 8A)",  "center_wavelength": 0.865, "full_width_half_max": 0.033 },
+                  {"name": "r10m/B08", "common_name": "nir", "description": "NIR 1 (band 8)", "center_wavelength": 0.842, "full_width_half_max": 0.145},        
+                  {"name": "r60m/B09", "common_name": "nir09", "description": "NIR 3 (band 9)", "center_wavelength": 0.945, "full_width_half_max": 0.026},
+                  {"name": "r20m/B11", "common_name": "swir16", "description": "SWIR 1 (band 11)", "center_wavelength": 1.61, "full_width_half_max": 0.143},
+                  {"name": "r20m/B12", "common_name": "swir22", "description": "SWIR 2 (band 12)", "center_wavelength": 2.19, "full_width_half_max": 0.242}
+              ],
+              "roles": ["data", "reflectance", "dataset"],
+              "title": "Surface Reflectance"
+          }
+    },
+    "linkTemplates": [
+      {
+        "rel": "data-variable",
+        "title": "store",
+        "uriTemplate": "https://objects.eodc.eu:443/e05ab01a9d56408d82ac32d69a5aae2a:202510-s02msil2a-eu/14/products/cpm_v256/S2C_MSIL2A_20251014T142151_N0511_R096_T25WET_20251014T161521.zarr/measurements/reflectance/{resolution}/{band}",
+        "variables": {
+          "resolution": {
+              "description": "resolution"
+          },
+          "band": {
+            "description": "...",
+          "type": "string",
+            "enum": [
+              "b02",
+              "b03",
+              "b04",
+            ]
+          }
         }
-      },
-      "cube:variables": {
-        "b02": {
-          "dimensions": ["y", "x"],
-          "type": "data",
-          "unit": null
-        },
-        "b03": {
-          "dimensions": ["y", "x"],
-          "type": "data",
-          "unit": null
-        },
-        "b04": {
-          "dimensions": ["y", "x"],
-          "type": "data",
-          "unit": null
-        },
-        "b08": {
-          "dimensions": ["y", "x"],
-          "type": "data",
-          "unit": null
-        }
-      },
-      "bands": [
-        {
-          "name": "b02",
-          "eo:common_name": "blue",
-          "description": "Blue band (490 nm)"
-        },
-        {
-          "name": "b03",
-          "eo:common_name": "green",
-          "description": "Green band (560 nm)"
-        },
-        {
-          "name": "b04",
-          "eo:common_name": "red",
-          "description": "Red band (665 nm)"
-        },
-        {
-          "name": "b08",
-          "eo:common_name": "nir",
-          "description": "NIR band (842 nm)"
-        }
+      }
       ]
-    }
   }
-}
 ```
 
 **Key Points**:
@@ -352,7 +327,6 @@ s3://bucket/ICON_d3hp003.zarr/
     "P1D_mean_z5_atm": {
       "href": "s3://bucket/ICON_d3hp003.zarr/P1D_mean_z5_atm",
       "type": "application/vnd+zarr; version=2",
-      "roles": ["group", "data"],
       "proj:shape": [425, 12288, 30, 5, 3],
       "cube:dimensions": {
         "time": {
@@ -421,7 +395,7 @@ s3://bucket/ICON_d3hp003.zarr/
           "name": "clivi",
           "description": "cloud ice path",
           "cf:standard_name": "atmosphere_mass_content_of_cloud_ice",
-          "unit": "kg m-2"
+          "unit": "kg m-2",
         },
         {
           "name": "clt",
@@ -525,12 +499,10 @@ For hierarchical stores, provide assets at meaningful organizational levels:
 "assets": {
   "measurements_r10m": {
     "href": "s3://bucket/data.zarr/measurements/reflectance/r10m",
-    "roles": ["group", "data"],
     "description": "10m resolution measurements"
   },
   "measurements_r20m": {
     "href": "s3://bucket/data.zarr/measurements/reflectance/r20m",
-    "roles": ["group", "data"],
     "description": "20m resolution measurements"
   }
 }
