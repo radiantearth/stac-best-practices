@@ -327,7 +327,6 @@ s3://bucket/ICON_d3hp003.zarr/
     "P1D_mean_z5_atm": {
       "href": "s3://bucket/ICON_d3hp003.zarr/P1D_mean_z5_atm",
       "type": "application/vnd+zarr; version=2",
-      "proj:shape": [425, 12288, 30, 5, 3],
       "cube:dimensions": {
         "time": {
           "type": "temporal",
