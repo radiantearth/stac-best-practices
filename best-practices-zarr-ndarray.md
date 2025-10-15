@@ -79,7 +79,7 @@ Key terms:
 3. **Assets cannot reference individual arrays within the store**
    
    Assets may point to:
-   - The root store
+   - The root group
    - Intermediate groups
    - Individual data variables/arrays
    
