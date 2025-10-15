@@ -76,7 +76,7 @@ Key terms:
    ]
    ```
 
-3. **Assets can reference Zarr groups or individual arrays within the store**
+3. **Assets cannot reference individual arrays within the store**
    
    Assets may point to:
    - The root store
