@@ -84,7 +84,11 @@ Key terms:
    
    The appropriate level depends on how users will access the data.
 
-4. **Zarr STAC Extension SHOULD align with Zarr conventions (that are currently being defined) to clearly indicate the data model that best represents the asset**
+4. **Band names SHALL BE relative to the asset group and point to an array within that group**
+
+    The band name shall be used as a relative path for accessing an array to point to a specific array within the group linked in the asset `href`.
+
+5. **Zarr STAC Extension SHOULD align with Zarr conventions (that are currently being defined) to clearly indicate the data model that best represents the asset**
    
    - `"multi-resolution"`: Reference to a multi-resolution datatree
    - `"single-resolution"`: Reference to a single resolution dataset
@@ -277,6 +281,34 @@ For Zarr assets, the following extensions are typically required:
 - Common properties (data_type, resolution) are at asset level
 - Band-specific metadata is in the `bands` array
 - Variable names match array names in the Zarr group
+
+**Accessing Individual Arrays**:
+
+The `name` field in the `bands` array plays a crucial role for programmatic data access. It should be constructed so that concatenating (path joining) the asset `href` and the band `name` results in the correct Zarr URL:
+
+```python
+import zarr
+
+asset_href = "s3://bucket/S2B_MSIL2A_20251006T123309.zarr/measurements/reflectance/r10m"
+band_name = "b04"
+
+# Access individual array
+red = zarr.open_array(asset_href + "/" + band_name)
+```
+
+This pattern enables applications to:
+1. Discover available variables through the STAC metadata
+2. Construct the correct path to access specific arrays
+3. Load data without needing to parse the entire Zarr hierarchy
+
+For xarray users, this would look like:
+
+```python
+import xarray as xr
+
+dataset = xr.open_zarr(asset_href)
+red = dataset["b04"].chunk({}).persist()
+```
 
 ### CF-Compliant Climate and Weather Data
 
