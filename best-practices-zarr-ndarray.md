@@ -240,7 +240,7 @@ For Zarr assets, the following extensions are typically required:
     "reflectance": {
       "gsd": 10,
       "href": "https://objects.eodc.eu:443/e05ab01a9d56408d82ac32d69a5aae2a:202510-s02msil2a-eu/14/products/cpm_v256/S2C_MSIL2A_20251014T142151_N0511_R096_T25WET_20251014T161521.zarr/measurements/reflectance/",
-      "type": "application/vnd+zarr",
+      "type": "application/vnd+zarr; version=3; profile=multiscales",
       "proj:epsg": 32625,
       "proj:shape": [10980, 10980],
       "bands": [
@@ -337,7 +337,7 @@ For Zarr assets, the following extensions are typically required:
           "proj:shape": [5940, 5940]
         }
       ],
-      "roles": ["reflectance", "multiscales"],
+      "roles": ["reflectance"],
       "title": "Surface Reflectance"
     }
   },
