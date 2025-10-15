@@ -481,7 +481,7 @@ s3://bucket/ICON_d3hp003.zarr/
           "description": "near-surface air temperature"
         },
         "ta": {
-          "dimensions": ["time", "cell", "pressure"],
+          "dimensions": ["time", "pressure", "cell"],
           "type": "data",
           "unit": "K",
           "description": "air temperature"
