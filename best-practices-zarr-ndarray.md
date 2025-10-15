@@ -43,7 +43,7 @@ See the [Zarr specification](https://zarr-specs.readthedocs.io/en/latest/v3/core
 Key terms:
 
 - **Zarr Store**: A storage system that can hold a Zarr hierarchy (e.g., a directory, zip file, or object store prefix)
-- **Group**: A node in a Zarr hierarchy that can contain arrays and/or other groups
+- **Group**: A node including the root node in a Zarr hierarchy that can contain arrays and/or other groups
 - **Array**: A multidimensional array with chunked storage
 - **Chunk**: A contiguous region of an array that is stored as a single object
 - **Consolidated Metadata**: A single metadata document containing the metadata for all arrays and groups in a store
