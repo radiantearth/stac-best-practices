@@ -218,7 +218,7 @@ For Zarr assets, the following extensions are typically required:
 └── quality/
 ```
 
-1 big reflectance STAC Representation**
+**One big reflectance STAC Representation**
 
 ```json
 {
