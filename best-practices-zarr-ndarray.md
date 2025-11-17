@@ -92,6 +92,8 @@ For all of the above use cases, the data can be organized in 2 main ways:
 
 - **Single Zarr Store per Collection**: The entire collection is contained within a single Zarr store. In this case, the data are often organized using additional dimensions (e.g., time) within arrays to organize the data. Assets in the STAC Collection can reference specific groups within the store and use the datacube extension to describe the multidimensional structure.
 
+- **Multiple Zarr Stores per Collection**: Each STAC Item in the collection references its own separate Zarr store. This pattern is appropriate when individual scenes or time slices are stored independently, allowing for more flexible data management and access patterns. Each Item's assets reference its unique Zarr store, following the same organization patterns described in the STAC Item section above.
+
 ### Asset Organization
 
 1. **A Zarr asset href SHALL reference a group in the Zarr hierarchy**
@@ -128,18 +130,20 @@ The best practices for `bands` from the [core specification](https://github.com/
 
 The most straightforward case is when each data variable corresponds to a unique band.
 
-- The Asset href SHALL point to the group containing the data variables
+- The **Asset href SHALL point to the group** containing the data variables
 - Each band in the `bands` array SHALL reference a data variable by using the `name` field
 
  ```json
 "assets": {
   "reflectance": {
+    // href pointing to a group within a Zarr store
     "href": "s3://bucket/path/data.zarr/measurements/reflectance/r10m",
     "type": "application/vnd+zarr; version=3",
     "bands": [
-    {"name": "b02", "eo:common_name": "blue"},
-    {"name": "b03", "eo:common_name": "green"},
-    {"name": "b04", "eo:common_name": "red"},
+      // band object for the `b02` variable within the `reflectance/r10m` Zarr group
+      {"name": "b02", "eo:common_name": "blue"},
+      {"name": "b03", "eo:common_name": "green"},
+      {"name": "b04", "eo:common_name": "red"},
     ]
   }
 }
@@ -147,7 +151,7 @@ The most straightforward case is when each data variable corresponds to a unique
 
 ##### Multiple bands per data variable (band as dimension)
 
-In some cases, a single data variable may contain multiple bands along a specific dimension (e.g., spectral bands stored as the dimension of the array). In this case, the `bands` array SHALL still reference individual bands, but the `name` field SHOULD indicate both the variable name and the band index or label.
+In some cases, a single data variable may contain multiple bands along a specific dimension (e.g., spectral bands stored as the dimension of the array). In this case, the band objects SHALL reference indexes within a variable, with the `name` field indicating both the variable name and the dimension index or label.
 
 ```json
 "assets": {
@@ -179,6 +183,30 @@ In some cases, a single data variable may contain multiple bands along a specifi
 ##### Bands in multiscales groups
 
 For multi-resolution data organized using the [multiscales convention](https://github.com/zarr-conventions/multiscales), bands are organized within resolution groups hosting data variables.
+
+The hierarchical structure of a multiscales Zarr store looks like this:
+
+```console
+dataset.zarr/
+      │
+      ├─► measurements/
+      │   │
+      │   └─► reflectance/         (multiscales group)
+      │        │
+      │        ├─► r10m/           (resolution level)
+      │        │    ├─► b02/       (array)
+      │        │    ├─► b03/       (array)
+      │        │    └─► b04/       (array)
+      │        │
+      │        ├─► r20m/           (resolution level)
+      │        │    └─► ...
+      │        │
+      │        ├─► r60m/           (resolution level)
+      │        │    └─► ...
+      │
+      └─► quality/
+```
+
 The `bands` array SHALL reference individual bands, and the `name` field SHOULD follow the same pattern as in the "Unique band per data variable" and "Multiple bands per data variable" cases, depending on how bands are organized within each resolution group.
 The key point is that the resolution group do not appear directly in the metadata but is implicitly hidden behind the asset href. It is up to the client to construct and select the correct path to access individual arrays based on the [layout](https://github.com/zarr-conventions/multiscales?tab=readme-ov-file#layout) given in the multiscales convention.
 
