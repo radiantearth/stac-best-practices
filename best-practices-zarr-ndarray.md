@@ -5,16 +5,18 @@
 - [Introduction](#introduction)
 - [Glossary](#glossary)
 - [General Rules](#general-rules)
+  - [STAC Object Type](#stac-object-type)
   - [Asset Organization](#asset-organization)
-  - [Link Relationships](#link-relationships)
-  - [Metadata Requirements](#metadata-requirements)
-- [Required Extensions](#required-extensions)
+  - [Bands Representation](#bands-representation)
+  - [Link Relationships and types](#link-relationships-and-types)
+  - [Link Templates](#link-templates)
+- [STAC Extensions Requirements](#stac-extensions-requirements)
 - [Use Cases](#use-cases)
   - [Scene-Based Zarr Stores (EOPF Products)](#scene-based-zarr-stores-eopf-products)
+    - [Resolution based group representation](#resolution-based-group-representation)
+    - [Multiscale reflectance group representation](#multiscale-reflectance-group-representation)
   - [CF-Compliant Climate and Weather Data](#cf-compliant-climate-and-weather-data)
   - [Virtual Zarr with Reference Files](#virtual-zarr-with-reference-files)
-- [Asset Discovery and Access Patterns](#asset-discovery-and-access-patterns)
-- [Credits](#credits)
 
 ## Introduction
 
@@ -47,6 +49,10 @@ Key terms:
 - **Array**: A leaf node in a Zarr hierarchy that represents a multidimensional array with chunked storage
 - **Chunk**: A contiguous region of an array that is stored as a single object
 
+Conventions terms:
+
+- **Multiscales Group**: A [convention](https://github.com/zarr-conventions/multiscales) for organizing multi-resolution data in Zarr stores, typically using a tree structure where each level represents a different resolution.
+
 ### Xarray/NetCDF/CF-Specific Concepts
 
 - **Variable**: A named data array within a Zarr group, typically representing a measured or derived quantity
@@ -56,6 +62,34 @@ Key terms:
 
 ## General Rules
 
+### STAC Object Type
+
+Zarr stores and n-dimensional arrays can be represented by 2 STAC object types depending on the use case.
+
+#### STAC Item
+
+A STAC Item is appropriate when the Zarr store or group represents a single logical dataset or scene, such as:
+
+- A satellite scene with multiple bands and resolutions
+- A time-specific climate model run output with multiple variables and dimensions
+- A single time slice of a time series
+- A single multiscale dataset
+
+It is **HIGHLY RECOMMENDED** to reference a unique Zarr store per STAC Item to avoid ambiguity when accessing data via the asset hrefs.
+
+#### STAC Collection
+
+A STAC Collection is appropriate when the Zarr store or group represents a collection of related datasets, such as:
+
+- A time series of satellite scenes
+- A climate model output spanning multiple time steps
+- A set of multiscale datasets for different regions or time periods
+- A collection of Zarr stores representing different variables or measurements
+
+For all of the above use cases, the data can be organized in 2 main ways:
+
+- **Single Zarr Store per Collection**: The entire collection is contained within a single Zarr store. In this case, the data are offten organized using additional dimensions (e.g., time) within arrays to organize the data. Assets in the STAC Collection can reference specific groups within the store and use the datacube extension to describe the multidimensional structure.
+
 ### Asset Organization
 
 1. **A Zarr asset href SHALL reference a group in the Zarr hierarchy**
@@ -63,70 +97,204 @@ Key terms:
    A single Zarr asset corresponds to a Zarr group, which may contain multiple arrays and subgroups.
    This is equivalent to an xarray Dataset or an xarray DataTree.
 
-2. **Bands within an asset SHALL reference an array within the asset group**
+2. **Assets representing Zarr stores SHALL use the appropriate media type with version information**
 
-   Individual arrays within the store SHOULD NOT be represented as separate assets.
+   - Zarr v2: `"application/vnd.zarr; version=2"`
+   - Zarr v3: `"application/vnd.zarr; version=3"`
 
-   The appropriate level depends on how users will access the data.
+   We also recommend using a `profile` parameter to indicate specific data models such as multiscasles (see #metadata-requirements).
 
-3. **Band names SHALL BE relative to the asset group and point to an array within that group**
+>[!NOTE]
+> The proposed `profile` parameter is not an official part of the Zarr media type specification but is suggested here to enhance clarity regarding the data model used within the Zarr store.
 
-   The band name corresponds to an existing path in the Zarr hierarchy relative to the asset group.
-   Band names may contain multiple path components. Path joining the asset `href` and band name shall resolve to a valid array path.
+3. **Bands within an asset SHALL reference available bands in a multispectral/multi-channel Zarr group**
 
-   ```json
-   "assets": {
-     "reflectance": {
-       "href": "s3://bucket/path/data.zarr/measurements/reflectance",
-       "type": "application/vnd+zarr; version=3",
-       "bands": [
-        {"name": "r10m/b04", "common_name": "red"},
-        {"name": "r20m/b05", "common_name": "rededge"}
-       ]
-     }
-   }
-   ```
+   Individual variable arrays within the store SHOULD NOT be represented as separate assets.
 
-4. **Zarr STAC Extension SHOULD align with Zarr conventions (that are currently being defined) to clearly indicate the data model that best represents the asset**
+   The appropriate level depends on how users will access the data. Section #bands-representation below provide details on how to represent bands within a Zarr asset.
 
-   - `"multi-resolution"`: Reference to a multi-resolution datatree
-   - `"single-resolution"`: Reference to a single resolution dataset
+#### Bands Representation
+
+For many applications, it is useful to provide band-level metadata for spectral or multi-channel data stored in Zarr groups. This allows clients to discover available bands and their properties without needing to parse the entire Zarr hierarchy.
+
+According to the organization of the data in the assset group and child arrays, bands can be represented in different ways described below.
+
+A general rule is that every band SHALL correspond to an entry in the `bands` array of the hosting asset.
+The best practices for `bands` from the [core specification](https://github.com/radiantearth/stac-spec/blob/master/best-practices.md#bands) also apply here.
+
+##### Unique band per data variable
+
+The most straightforward case is when each data variable corresponds to a unique band.
+
+- The Asset href SHALL point to the group containing the data variables
+- Each band in the `bands` array SHALL reference a data variable by using the `name` field
+
+ ```json
+"assets": {
+  "reflectance": {
+    "href": "s3://bucket/path/data.zarr/measurements/reflectance/r10m",
+    "type": "application/vnd+zarr; version=3",
+    "bands": [
+    {"name": "b02", "eo:common_name": "blue"},
+    {"name": "b03", "eo:common_name": "green"},
+    {"name": "b04", "eo:common_name": "red"},
+    ]
+  }
+}
+```
+
+##### Multiple bands per data variable (band as dimension)
+
+In some cases, a single data variable may contain multiple bands along a specific dimension (e.g., spectral bands stored as the dimension of the array). In this case, the `bands` array SHALL still reference individual bands, but the `name` field SHOULD indicate both the variable name and the band index or label.
+
+```json
+"assets": {
+  "reflectance": {
+    "href": "s3://bucket/path/data.zarr",
+    "type": "application/vnd+zarr; version=3",
+    "bands": [
+    {"name": "reflectance[band=blue]", "eo:common_name": "blue"},
+    {"name": "reflectance[band=green]", "eo:common_name": "green"},
+    {"name": "reflectance[band=red]", "eo:common_name": "red"},
+    ],
+    "cube:variables": {
+      "reflectance": {
+        "dimensions": ["y", "x", "band"],
+        "type": "data",
+      }
+    },
+    "cube:dimensions": {
+      "band": {
+        "type": "spectral",
+        "description": "Spectral bands",
+        "values": ["blue", "green", "red"]
+      }
+    }
+  }
+}
+```
+
+##### Bands in multiscales groups
+
+For multi-resolution data organized using the [multiscales convention](https://github.com/zarr-conventions/multiscales), bands are organized within resolution groups hosting data variables.
+The `bands` array SHALL reference individual bands, and the `name` field SHOULD follow the same pattern as in the "Unique band per data variable" and "Multiple bands per data variable" cases, depending on how bands are organized within each resolution group.
+The key point is that the resolution group do not appear directly in the metadata but is implicitely hidden behind the asset href. It is up to the client to construct and select the correct path to access individual arrays based on the [layout](https://github.com/zarr-conventions/multiscales?tab=readme-ov-file#layout) given in the multiscales convention.
+
+```json
+"assets": {
+    "reflectance": {
+      "href": "s3://esa-zarr-sentinel-explorer-fra/tests-output/sentinel-2-l2a/S2A_MSIL2A_20251008T100041_N0511_R122_T32TQM_20251008T122613.zarr/measurements/reflectance",
+      "type": "application/vnd+zarr; version=3; profile=multiscales",
+      "title": "Surface Reflectance",
+      "gsd": 10,
+      "bands": [
+        {
+          "name": "b01",
+          "eo:common_name": "coastal",
+          "description": "Coastal aerosol (band 1)",
+          "gsd": 60
+        },
+        {
+          "name": "b02",
+          "common_name": "blue",
+          "description": "Blue (band 2)",
+        },
+        {
+          "name": "b03",
+          "eo:common_name": "green",
+          "description": "Green (band 3)",
+        },
+        {
+          "name": "b04",
+          "eo:common_name": "red",
+          "description": "Red (band 4)",
+        },
+        {
+          "name": "b05",
+          "common_name": "rededge",
+          "description": "Red edge 1 (band 5)",
+          "gsd": 20
+        },
+        {
+          "name": "b06",
+          "common_name": "rededge",
+          "description": "Red edge 2 (band 6)",
+          "gsd": 20
+        },
+        {
+          "name": "b07",
+          "common_name": "rededge",
+          "description": "Red edge 3 (band 7)",
+          "gsd": 20
+        },
+        {
+          "name": "b8A",
+          "common_name": "nir08",
+          "description": "NIR 2 (band 8A)",
+          "gsd": 20
+        },
+        {
+          "name": "b08",
+          "common_name": "nir",
+          "description": "NIR 1 (band 8)",
+        },
+        {
+          "name": "b09",
+          "common_name": "nir09",
+          "description": "NIR 3 (band 9)",
+          "gsd": 60
+        },
+        {
+          "name": "b11",
+          "common_name": "swir16",
+          "description": "SWIR 1 (band 11)",
+          "gsd": 20
+        },
+        {
+          "name": "b12",
+          "common_name": "swir22",
+          "description": "SWIR 2 (band 12)",
+          "gsd": 20
+        }
+      ],
+      "roles": ["data", "reflectance"]
+    }
+}
+```
 
 ### Link Relationships and types
 
-**Store Link Relationship**
+#### Store Link Relationship
 
-The Zarr store SHOULD be referenced with a link using the `"store"` relationship.
+The Zarr store SHOULD be referenced with a link using the `"store"` relationship. This is required for clients to discover the root of the Zarr hierarchy and locate the related assets.
 
 ```json
 "links": [
   {
     "rel": "store",
     "href": "s3://bucket/path/data.zarr",
-    "type": "application/vnd+zarr; version=2",
+    "type": "application/vnd+zarr; version=3",
     "title": "Zarr Store"
   }
 ]
 ```
 
-**TODO**: Propose this relationship for inclusion in the storage STAC extension.
+> [!IMPORTANT] This best practise assumes that all assets referenced in the STAC object are contained within the same Zarr store.
 
-**Media Type**
+##### Virtual Zarr Stores
+
+For virtual Zarr stores created using tools like Kerchunk, the link with `rel: store` SHOULD point to the reference file (e.g., JSON file) that defines the virtual Zarr store.
+
+#### Media Type
 
 The media type for Zarr should include version information as a parameter:
 
-- Zarr v2: `"application/vnd+zarr; version=2"`
-- Zarr v3: `"application/vnd+zarr; version=3"`
-
-This follows the pattern established by Cloud Optimized GeoTIFF:
-
-```json
-"type": "image/tiff; application=geotiff; profile=cloud-optimized"
-```
+- Zarr v2: `"application/vnd.zarr; version=2"`
+- Zarr v3: `"application/vnd.zarr; version=3"`
 
 ### Link Templates
 
-**Link Template Relationship**
+#### Link Template Relationship
 
 [Link Templates](https://github.com/stac-extensions/link-templates/) CAN be used to refer to arrays that are data variables contained by a zarr group that is referenced by an asset:
 
@@ -151,57 +319,34 @@ This follows the pattern established by Cloud Optimized GeoTIFF:
 ]
 ```
 
-### Metadata Requirements
+## STAC Extensions Requirements
 
-1. **The datacube extension SHOULD be used to describe variables and dimensions when relevant**
+1. **[Datacube extension](https://github.com/stac-extensions/datacube) >=v2.0.0 SHOULD be used to describe variables and dimensions when relevant**
 
-   For groups containing multiple variables, use `cube:variables` and `cube:dimensions` to document:
+   It is used to describe multidimensional structure for groups containing multiple variables, use `cube:variables` and `cube:dimensions`, especially when variable arrays have more than the 2 spatial dimensions.
 
    - Available variables and their dimensional structure
    - Dimension extents and coordinate systems
    - Relationships between variables
 
-   TODO: Update this once the [proposed changes to the datacube extension](https://github.com/stac-extensions/datacube/issues/30) are finalized.
+2. **[Projection Extension](https://github.com/stac-extensions/projection) >=v2.0.0 SHOULD be used to describe spatial reference information**
 
-2. **Band information SHOULD be provided for spectral/multi-channel data**
+   Key attributes to include:
 
-   The `bands` array should contain keys corresponding to data variable names, with values providing band-specific metadata.
+   - `proj:code`, `proj:wkt2`, or `proj:projjson`
+   - `proj:shape` and `proj:transform`
 
-3. **CF convention attributes SHOULD be preserved when applicable**
+  If the referenced Zarr store follows the [geo-proj convention](https://github.com/zarr-conventions/geo-proj), the projection information should be consistent with the convention.
+
+3. **[Raster Extension](https://github.com/stac-extensions/raster) >=v2.0.0 SHOULD be used for raster-like arrays**
+  
+   - `raster:spatial_resolution`
+   - `raster:scale` and `raster:offset` (if applicable)
+   - `data_type` and `nodata`
+
+4. **[CF Extension](https://github.com/stac-extensions/cf) SHOULD be used for climate and forecast data following CF conventions**
 
    For data following CF conventions (Climate and Forecast), relevant attributes like `standard_name`, `units`, and `cell_methods` should be represented in STAC metadata.
-
-   TODO: to be refined with the community.
-
-4. **A specific `profile=multiscales` parameter in the content-type SHOULD be used for assets representing multi-resolution data**
-
-   Example:
-
-   ```json
-   "type": "application/vnd+zarr; version=3; profile=multiscales"
-   ```
-
->[!NOTE]
-> The proposed `profile` parameter here requires more discussions , especially one the [Multiscales Zarr convention](https://github.com/zarr-experimental/multiscales) that is being specified and proposed.
-
-## Required Extensions
-
-For Zarr assets, the following extensions are typically required:
-
-- **Datacube Extension (v2.x)**: To describe multidimensional structure
-
-  - `cube:dimensions`: Define coordinate dimensions
-  - `cube:variables`: Describe data variables within groups
-
-- **Projection Extension (v2.x)**: For georeferenced arrays
-
-  - `proj:code`, `proj:wkt2`, or `proj:projjson`
-  - `proj:shape` and `proj:transform`
-
-- **Raster Extension (v2.x)**: For raster-like arrays
-  - `raster:spatial_resolution`
-  - `raster:scale` and `raster:offset` (if applicable)
-  - `data_type` and `nodata`
 
 ## Use Cases
 
@@ -211,7 +356,7 @@ For Zarr assets, the following extensions are typically required:
 
 **Store Structure**:
 
-```
+```console
 /
 ├── conditions/
 ├── measurements/
@@ -228,160 +373,18 @@ For Zarr assets, the following extensions are typically required:
 └── quality/
 ```
 
-**One big reflectance STAC Representation**
+#### Resolution based group representation
 
-```json
-{
-  "type": "Feature",
-  "stac_version": "1.1.0",
-  "id": "S2B_MSIL2A_20251006T123309",
-  "properties": {
-    "datetime": "2025-10-06T12:33:09Z"
-  },
-  "links": [
-    {
-      "rel": "store",
-      "href": "s3://bucket/S2B_MSIL2A_20251006T123309.zarr",
-      "type": "application/vnd+zarr; version=2",
-      "title": "Sentinel-2 L2A Zarr Store"
-    }
-  ],
-  "assets": {
-    "reflectance": {
-      "gsd": 10,
-      "href": "https://objects.eodc.eu:443/e05ab01a9d56408d82ac32d69a5aae2a:202510-s02msil2a-eu/14/products/cpm_v256/S2C_MSIL2A_20251014T142151_N0511_R096_T25WET_20251014T161521.zarr/measurements/reflectance/",
-      "type": "application/vnd+zarr; version=3; profile=multiscales",
-      "proj:epsg": 32625,
-      "proj:shape": [10980, 10980],
-      "bands": [
-        {
-          "name": "r60m/b01",
-          "common_name": "coastal",
-          "description": "Coastal aerosol (band 1)",
-          "center_wavelength": 0.443,
-          "full_width_half_max": 0.027,
-          "proj:shape": [1980, 1980]
-        },
-        {
-          "name": "r10m/b02",
-          "common_name": "blue",
-          "description": "Blue (band 2)",
-          "center_wavelength": 0.49,
-          "full_width_half_max": 0.098
-        },
-        {
-          "name": "r10m/b03",
-          "common_name": "green",
-          "description": "Green (band 3)",
-          "center_wavelength": 0.56,
-          "full_width_half_max": 0.045
-        },
-        {
-          "name": "r10m/b04",
-          "common_name": "red",
-          "description": "Red (band 4)",
-          "center_wavelength": 0.665,
-          "full_width_half_max": 0.038
-        },
-        {
-          "name": "r20m/b05",
-          "common_name": "rededge",
-          "description": "Red edge 1 (band 5)",
-          "center_wavelength": 0.704,
-          "full_width_half_max": 0.019,
-          "proj:shape": [5940, 5940]
-        },
-        {
-          "name": "r20m/b06",
-          "common_name": "rededge",
-          "description": "Red edge 2 (band 6)",
-          "center_wavelength": 0.74,
-          "full_width_half_max": 0.018,
-          "proj:shape": [5940, 5940]
-        },
-        {
-          "name": "r20m/b07",
-          "common_name": "rededge",
-          "description": "Red edge 3 (band 7)",
-          "center_wavelength": 0.783,
-          "full_width_half_max": 0.028,
-          "proj:shape": [5940, 5940]
-        },
-        {
-          "name": "r20m/b8A",
-          "common_name": "nir08",
-          "description": "NIR 2 (band 8A)",
-          "center_wavelength": 0.865,
-          "full_width_half_max": 0.033,
-          "proj:shape": [5940, 5940]
-        },
-        {
-          "name": "r10m/b08",
-          "common_name": "nir",
-          "description": "NIR 1 (band 8)",
-          "center_wavelength": 0.842,
-          "full_width_half_max": 0.145
-        },
-        {
-          "name": "r60m/b09",
-          "common_name": "nir09",
-          "description": "NIR 3 (band 9)",
-          "center_wavelength": 0.945,
-          "full_width_half_max": 0.026,
-          "proj:shape": [1980, 1980]
-        },
-        {
-          "name": "r20m/b11",
-          "common_name": "swir16",
-          "description": "SWIR 1 (band 11)",
-          "center_wavelength": 1.61,
-          "full_width_half_max": 0.143,
-          "proj:shape": [5940, 5940]
-        },
-        {
-          "name": "r20m/b12",
-          "common_name": "swir22",
-          "description": "SWIR 2 (band 12)",
-          "center_wavelength": 2.19,
-          "full_width_half_max": 0.242,
-          "proj:shape": [5940, 5940]
-        }
-      ],
-      "roles": ["reflectance"],
-      "title": "Surface Reflectance"
-    }
-  },
-  "linkTemplates": [
-    {
-      "rel": "data-variable",
-      "title": "store",
-      "uriTemplate": "https://objects.eodc.eu:443/e05ab01a9d56408d82ac32d69a5aae2a:202510-s02msil2a-eu/14/products/cpm_v256/S2C_MSIL2A_20251014T142151_N0511_R096_T25WET_20251014T161521.zarr/measurements/reflectance/{resolution}/{band}",
-      "variables": {
-        "resolution": {
-          "description": "resolution",
-          "type": "string",
-          "enum": ["r10m", "r20m", "r60m"]
-        },
-        "band": {
-          "description": "band name",
-          "type": "string",
-          "enum": ["b01", "b02", "b03", "b04", "b05", "b06", "b07", "b8A", "b08", "b09", "b11", "b12"]
-        }
-      }
-    }
-  ]
-}
-```
-
-`linkTemplates` provides a way to construct URLs for accessing individual arrays programmatically. This is not necessarily required but can be very useful for clients.
+In this [example](examples/S2A_MSIL2A_20251008T100041_N0511_R122_T32TQM_20251008T122613.json), each resolution group (e.g., `r10m`, `r20m`, `r60m`) is represented as a separate asset in the STAC Item. Each asset points to the corresponding Zarr group containing the data arrays for that resolution.
 
 **Key Points**:
 
-- The store link provides the root Zarr location
-- Assets point to specific resolution groups
+- Each asset href points to a specific resolution group
 - Common properties (data_type, resolution) are at asset level
 - Band-specific metadata is in the `bands` array
 - Variable names match array names in the Zarr group
+- Clients can easily discover and access data at different resolutions
+- This pattern is useful when users need to work with specific resolutions independently
 
 **Accessing Individual Arrays**:
 
@@ -392,25 +395,29 @@ import zarr
 
 asset_href = "s3://bucket/S2B_MSIL2A_20251006T123309.zarr/measurements/reflectance/r10m"
 band_name = "b04"
-
 # Access individual array
 red = zarr.open_array(asset_href + "/" + band_name)
 ```
 
-This pattern enables applications to:
+#### Multiscale reflectance group representation
 
-1. Discover available variables through the STAC metadata
-2. Construct the correct path to access specific arrays
-3. Load data without needing to parse the entire Zarr hierarchy
+The [single multiscales asset example](examples/S2A_MSIL2A_20251008T100041_N0511_R122_T32TQM_20251008T122613_single_asset.json) represents the `reflectance` group at multiple resolutions.
 
-For xarray users, this would look like:
+**Key Points**:
 
-```python
-import xarray as xr
+- The store link provides the root Zarr location
+- A single asset represents the entire multiscales group
+- The `profile` parameter indicates multiscales organization
+- Common properties (data_type, resolution) are at asset level
+- Band-specific metadata is in the `bands` array with overrides for band specific properties (e.g., `gsd`)
+- Variable names match array names in the Zarr multiscales groups
+- Clients can discover and access data at different resolutions by navigating the multiscales hierarchy
 
-dataset = xr.open_zarr(asset_href)
-red = dataset["b04"].chunk({}).persist()
-```
+**Accessing Individual Arrays**:
+
+The `name` field in the `bands` array is used to identify individual bands. Clients need to construct the correct path to access specific arrays based on the multiscales layout.
+
+TODO
 
 ### CF-Compliant Climate and Weather Data
 
@@ -418,7 +425,7 @@ red = dataset["b04"].chunk({}).persist()
 
 **Store Structure**:
 
-```
+```console
 s3://bucket/ICON_d3hp003.zarr/
 └── P1D_mean_z5_atm/  (single group)
     ├── clivi (425, 12288) float32
@@ -432,248 +439,11 @@ s3://bucket/ICON_d3hp003.zarr/
     └── pressure (30) float32
 ```
 
-**STAC Representation**:
-
-```json
-{
-  "type": "Feature",
-  "stac_version": "1.1.0",
-  "id": "ICON_d3hp003_P1D_mean_z5_atm",
-  "properties": {
-    "start_datetime": "2020-01-02T00:00:00Z",
-    "end_datetime": "2021-03-01T00:00:00Z"
-  },
-  "links": [
-    {
-      "rel": "store",
-      "href": "s3://bucket/ICON_d3hp003.zarr",
-      "type": "application/vnd+zarr; version=2",
-      "title": "ICON Model Output Zarr Store"
-    }
-  ],
-  "assets": {
-    "P1D_mean_z5_atm": {
-      "href": "s3://bucket/ICON_d3hp003.zarr/P1D_mean_z5_atm",
-      "type": "application/vnd+zarr; version=2",
-      "cube:dimensions": {
-        "time": {
-          "type": "temporal",
-          "description": "time",
-          "extent": ["2020-01-02T00:00:00Z", "2021-03-01T00:00:00Z"],
-          "step": "P1D",
-          "unit": "seconds since 2020-01-01T00:00:00"
-        },
-        "cell": {
-          "type": "spatial",
-          "axis": "cell",
-          "description": "cell index in HEALPix grid",
-          "bbox": [
-            -180.0,
-            -90.0,
-            180.0,
-            90.0
-          ],
-          "reference_system": "HEALPix"
-        },
-        "pressure": {
-          "type": "vertical",
-          "axis": "z",
-          "description": "pressure level",
-          "extent": [5.0, 100000.0],
-          "unit": "Pa"
-        }
-      },
-      "cube:variables": {
-        "clivi": {
-          "dimensions": ["time", "cell"],
-          "type": "data",
-          "unit": "kg m-2",
-          "description": "cloud ice path"
-        },
-        "clt": {
-          "dimensions": ["time", "cell"],
-          "type": "data",
-          "unit": "m2 m-2",
-          "description": "total cloud cover"
-        },
-        "hfls": {
-          "dimensions": ["time", "cell"],
-          "type": "data",
-          "unit": "W m-2",
-          "description": "surface upward latent heat flux"
-        },
-        "pr": {
-          "dimensions": ["time", "cell"],
-          "type": "data",
-          "unit": "kg m-2 s-1",
-          "description": "precipitation flux"
-        },
-        "tas": {
-          "dimensions": ["time", "cell"],
-          "type": "data",
-          "unit": "K",
-          "description": "near-surface air temperature"
-        },
-        "ta": {
-          "dimensions": ["time", "pressure", "cell"],
-          "type": "data",
-          "unit": "K",
-          "description": "air temperature"
-        }
-      },
-      "bands": [
-        {
-          "name": "clivi",
-          "description": "cloud ice path",
-          "cf:standard_name": "atmosphere_mass_content_of_cloud_ice",
-          "unit": "kg m-2",
-        },
-        {
-          "name": "clt",
-          "description": "total cloud cover",
-          "cf:standard_name": "cloud_area_fraction",
-          "unit": "m2 m-2"
-        },
-        {
-          "name": "hfls",
-          "description": "surface upward latent heat flux",
-          "cf:standard_name": "surface_upward_latent_heat_flux",
-          "unit": "W m-2"
-        },
-        {
-          "name": "pr",
-          "description": "precipitation flux",
-          "cf:standard_name": "precipitation_flux",
-          "unit": "kg m-2 s-1"
-        },
-        {
-          "name": "tas",
-          "description": "near-surface air temperature",
-          "cf:standard_name": "air_temperature",
-          "unit": "K"
-        },
-        {
-          "name": "ta",
-          "description": "air temperature",
-          "cf:standard_name": "air_temperature",
-          "unit": "K"
-        }
-      ]
-    }
-  }
-}
-```
-
-and with the proposal of removing `cube:variables`, the above example becomes the following:
-
-```json
-{
-  "type": "Feature",
-  "stac_version": "1.1.0",
-  "id": "ICON_d3hp003_P1D_mean_z5_atm",
-  "properties": {
-    "start_datetime": "2020-01-02T00:00:00Z",
-    "end_datetime": "2021-03-01T00:00:00Z"
-  },
-  "links": [
-    {
-      "rel": "store",
-      "href": "s3://bucket/ICON_d3hp003.zarr",
-      "type": "application/vnd+zarr; version=2",
-      "title": "ICON Model Output Zarr Store"
-    }
-  ],
-  "assets": {
-    "P1D_mean_z5_atm": {
-      "href": "s3://bucket/ICON_d3hp003.zarr/P1D_mean_z5_atm",
-      "type": "application/vnd+zarr; version=2",
-      "cube:dimensions": {
-        "time": {
-          "type": "temporal",
-          "description": "time",
-          "extent": ["2020-01-02T00:00:00Z", "2021-03-01T00:00:00Z"],
-          "step": "P1D",
-          "unit": "seconds since 2020-01-01T00:00:00"
-        },
-        "cell": {
-          "type": "spatial",
-          "axis": "cell",
-          "description": "cell index in HEALPix grid",
-          "bbox": [
-            -180.0,
-            -90.0,
-            180.0,
-            90.0
-          ],
-          "reference_system": "HEALPix"
-        },
-        "pressure": {
-          "type": "vertical",
-          "axis": "z",
-          "description": "pressure level",
-          "extent": [5.0, 100000.0],
-          "unit": "Pa"
-        }
-      },
-      "bands": [
-        {
-          "name": "clivi",
-          "description": "cloud ice path",
-          "cf:standard_name": "atmosphere_mass_content_of_cloud_ice",
-          "unit": "kg m-2",
-          "cube:dimension_refs": ["time", "cell"],
-          "cube:type": "data",
-        },
-        {
-          "name": "clt",
-          "description": "total cloud cover",
-          "cf:standard_name": "cloud_area_fraction",
-          "unit": "m2 m-2",
-          "cube:dimension_refs": ["time", "cell"],
-          "cube:type": "data",
-        },
-        {
-          "name": "hfls",
-          "description": "surface upward latent heat flux",
-          "cf:standard_name": "surface_upward_latent_heat_flux",
-          "unit": "W m-2",
-          "cube:dimension_refs": ["time", "cell"],
-          "cube:type": "data",
-        },
-        {
-          "name": "pr",
-          "description": "precipitation flux",
-          "cf:standard_name": "precipitation_flux",
-          "unit": "kg m-2 s-1",
-          "cube:dimension_refs": ["time", "cell"],
-          "cube:type": "data",
-        },
-        {
-          "name": "tas",
-          "description": "near-surface air temperature",
-          "cf:standard_name": "air_temperature",
-          "unit": "K",
-          "cube:dimension_refs": ["time", "cell"],
-          "cube:type": "data",
-        },
-        {
-          "name": "ta",
-          "description": "air temperature",
-          "cf:standard_name": "air_temperature",
-          "unit": "K",
-          "cube:dimension_refs": ["time", "pressure", "cell"],
-          "type": "data",
-        }
-      ]
-    }
-  }
-}
-```
-
+The [example STAC Item](examples/ICON_d3hp003_cf.json) represents a Zarr store containing multiple CF-compliant variables with different dimensional structures.
 
 **Key Points**:
 
-- Single asset represents an entire xarray Dataset
+- Single asset represents a Zarr group with multiple CF variables
 - Multiple dimension types: temporal, spatial (non-standard grid), vertical
 - Variables have different dimensional structures (2D vs 3D)
 - CF standard names are preserved using a `cf:` prefix
@@ -684,35 +454,7 @@ and with the proposal of removing `cube:variables`, the above example becomes th
 
 **Context**: Kerchunk and similar tools create virtual Zarr stores that reference existing data files (e.g., NetCDF) without copying data. This enables Zarr-like access to legacy formats.
 
-**STAC Representation**:
-
-```json
-{
-  "type": "Feature",
-  "stac_version": "1.1.0",
-  "id": "CMIP6_ScenarioMIP_NCAR_CESM2",
-  "properties": {
-    "start_datetime": "2015-01-01T00:00:00Z",
-    "end_datetime": "2024-12-31T23:59:59Z"
-  },
-  "links": [
-    {
-      "rel": "store",
-      "href": "https://storage.example.com/kerchunk/CMIP6_CESM2_rlus_kr1.0.json",
-      "type": "application/json+zstd",
-      "title": "Kerchunk Reference File"
-    }
-  ],
-  "assets": {
-    "source_data": {
-      "href": "https://storage.example.com/data/CMIP6/rlus_day_CESM2-WACCM_ssp585_gn_20150101-20241231.nc",
-      "type": "application/netcdf",
-      "title": "Original NetCDF file",
-      "roles": ["source"]
-    }
-  }
-}
-```
+The [example STAC Item](examples/CMIP6_ScenarioMIP_NCAR_CESM2.json) represents a virtual Zarr store defined by a Kerchunk reference file.
 
 **Key Points**:
 
@@ -721,21 +463,4 @@ and with the proposal of removing `cube:variables`, the above example becomes th
 - Role `"reference"` indicates virtual/indirect data access
 - Role `"source"` indicates the underlying data files
 
-## Asset Discovery and Access Patterns
 
-### Accessing Zarr Subgroups
-
-For hierarchical stores, provide assets at meaningful organizational levels:
-
-```json
-"assets": {
-  "measurements_r10m": {
-    "href": "s3://bucket/data.zarr/measurements/reflectance/r10m",
-    "description": "10m resolution measurements"
-  },
-  "measurements_r20m": {
-    "href": "s3://bucket/data.zarr/measurements/reflectance/r20m",
-    "description": "20m resolution measurements"
-  }
-}
-```

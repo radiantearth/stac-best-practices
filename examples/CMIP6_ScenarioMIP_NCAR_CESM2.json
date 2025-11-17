@@ -1,0 +1,25 @@
+{
+  "type": "Feature",
+  "stac_version": "1.1.0",
+  "id": "CMIP6_ScenarioMIP_NCAR_CESM2",
+  "properties": {
+    "start_datetime": "2015-01-01T00:00:00Z",
+    "end_datetime": "2024-12-31T23:59:59Z"
+  },
+  "links": [
+    {
+      "rel": "store",
+      "href": "https://storage.example.com/kerchunk/CMIP6_CESM2_rlus_kr1.0.json",
+      "type": "application/json+zstd",
+      "title": "Kerchunk Reference File"
+    }
+  ],
+  "assets": {
+    "source_data": {
+      "href": "https://storage.example.com/data/CMIP6/rlus_day_CESM2-WACCM_ssp585_gn_20150101-20241231.nc",
+      "type": "application/netcdf",
+      "title": "Original NetCDF file",
+      "roles": ["source"]
+    }
+  }
+}
