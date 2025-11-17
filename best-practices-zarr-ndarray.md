@@ -8,7 +8,7 @@
   - [STAC Object Type](#stac-object-type)
   - [Asset Organization](#asset-organization)
   - [Bands Representation](#bands-representation)
-  - [Link Relationships and types](#link-relationships-and-types)
+  - [Link Relationships and Types](#link-relationships-and-types)
   - [Link Templates](#link-templates)
 - [STAC Extensions Requirements](#stac-extensions-requirements)
 - [Use Cases](#use-cases)
@@ -22,17 +22,19 @@
 
 This document provides best practices for representing Zarr stores and other n-dimensional array formats in STAC. These guidelines address:
 
+- STAC object types suitable for Zarr stores
 - Asset hierarchy and organization for Zarr groups and arrays
 - Discovery patterns for variables within multidimensional stores
 - Integration with datacube extension for variable and dimension metadata
 - Use of link relationships to reference Zarr stores
 - Asset metadata for multi-resolution and hierarchical data structures
 
-The following specifications and extensions are discussed in this document:
+The following specifications and extensions are referenced in this document:
 
 - [STAC v1.1](https://github.com/radiantearth/stac-spec/tree/v1.1.0)
 - [Datacube Extension v2.x](https://github.com/stac-extensions/datacube)
 - [Raster Extension v2.x](https://github.com/stac-extensions/raster)
+- [CF Extension v1.x](https://github.com/stac-extensions/cf)
 - [Electro Optical (EO) Extension v2.x](https://github.com/stac-extensions/eo)
 - [Projection Extension v2.x](https://github.com/stac-extensions/projection)
 
@@ -88,7 +90,7 @@ A STAC Collection is appropriate when the Zarr store or group represents a colle
 
 For all of the above use cases, the data can be organized in 2 main ways:
 
-- **Single Zarr Store per Collection**: The entire collection is contained within a single Zarr store. In this case, the data are offten organized using additional dimensions (e.g., time) within arrays to organize the data. Assets in the STAC Collection can reference specific groups within the store and use the datacube extension to describe the multidimensional structure.
+- **Single Zarr Store per Collection**: The entire collection is contained within a single Zarr store. In this case, the data are often organized using additional dimensions (e.g., time) within arrays to organize the data. Assets in the STAC Collection can reference specific groups within the store and use the datacube extension to describe the multidimensional structure.
 
 ### Asset Organization
 
@@ -102,7 +104,7 @@ For all of the above use cases, the data can be organized in 2 main ways:
    - Zarr v2: `"application/vnd.zarr; version=2"`
    - Zarr v3: `"application/vnd.zarr; version=3"`
 
-   We also recommend using a `profile` parameter to indicate specific data models such as multiscasles (see #metadata-requirements).
+   We also recommend using a `profile` parameter to indicate specific data models such as multiscales (see #metadata-requirements).
 
 >[!NOTE]
 > The proposed `profile` parameter is not an official part of the Zarr media type specification but is suggested here to enhance clarity regarding the data model used within the Zarr store.
@@ -117,7 +119,7 @@ For all of the above use cases, the data can be organized in 2 main ways:
 
 For many applications, it is useful to provide band-level metadata for spectral or multi-channel data stored in Zarr groups. This allows clients to discover available bands and their properties without needing to parse the entire Zarr hierarchy.
 
-According to the organization of the data in the assset group and child arrays, bands can be represented in different ways described below.
+According to the organization of the data in the asset group and child arrays, bands can be represented in different ways described below.
 
 A general rule is that every band SHALL correspond to an entry in the `bands` array of the hosting asset.
 The best practices for `bands` from the [core specification](https://github.com/radiantearth/stac-spec/blob/master/best-practices.md#bands) also apply here.
@@ -178,7 +180,7 @@ In some cases, a single data variable may contain multiple bands along a specifi
 
 For multi-resolution data organized using the [multiscales convention](https://github.com/zarr-conventions/multiscales), bands are organized within resolution groups hosting data variables.
 The `bands` array SHALL reference individual bands, and the `name` field SHOULD follow the same pattern as in the "Unique band per data variable" and "Multiple bands per data variable" cases, depending on how bands are organized within each resolution group.
-The key point is that the resolution group do not appear directly in the metadata but is implicitely hidden behind the asset href. It is up to the client to construct and select the correct path to access individual arrays based on the [layout](https://github.com/zarr-conventions/multiscales?tab=readme-ov-file#layout) given in the multiscales convention.
+The key point is that the resolution group do not appear directly in the metadata but is implicitly hidden behind the asset href. It is up to the client to construct and select the correct path to access individual arrays based on the [layout](https://github.com/zarr-conventions/multiscales?tab=readme-ov-file#layout) given in the multiscales convention.
 
 ```json
 "assets": {
@@ -196,7 +198,7 @@ The key point is that the resolution group do not appear directly in the metadat
         },
         {
           "name": "b02",
-          "common_name": "blue",
+          "eo:common_name": "blue",
           "description": "Blue (band 2)",
         },
         {
@@ -211,48 +213,48 @@ The key point is that the resolution group do not appear directly in the metadat
         },
         {
           "name": "b05",
-          "common_name": "rededge",
+          "eo:common_name": "rededge",
           "description": "Red edge 1 (band 5)",
           "gsd": 20
         },
         {
           "name": "b06",
-          "common_name": "rededge",
+          "eo:common_name": "rededge",
           "description": "Red edge 2 (band 6)",
           "gsd": 20
         },
         {
           "name": "b07",
-          "common_name": "rededge",
+          "eo:common_name": "rededge",
           "description": "Red edge 3 (band 7)",
           "gsd": 20
         },
         {
           "name": "b8A",
-          "common_name": "nir08",
+          "eo:common_name": "nir08",
           "description": "NIR 2 (band 8A)",
           "gsd": 20
         },
         {
           "name": "b08",
-          "common_name": "nir",
+          "eo:common_name": "nir",
           "description": "NIR 1 (band 8)",
         },
         {
           "name": "b09",
-          "common_name": "nir09",
+          "eo:common_name": "nir09",
           "description": "NIR 3 (band 9)",
           "gsd": 60
         },
         {
           "name": "b11",
-          "common_name": "swir16",
+          "eo:common_name": "swir16",
           "description": "SWIR 1 (band 11)",
           "gsd": 20
         },
         {
           "name": "b12",
-          "common_name": "swir22",
+          "eo:common_name": "swir22",
           "description": "SWIR 2 (band 12)",
           "gsd": 20
         }
@@ -262,7 +264,7 @@ The key point is that the resolution group do not appear directly in the metadat
 }
 ```
 
-### Link Relationships and types
+### Link Relationships and Types
 
 #### Store Link Relationship
 
@@ -279,7 +281,7 @@ The Zarr store SHOULD be referenced with a link using the `"store"` relationship
 ]
 ```
 
-> [!IMPORTANT] This best practise assumes that all assets referenced in the STAC object are contained within the same Zarr store.
+> [!IMPORTANT] This best practice assumes that all assets referenced in the STAC object are contained within the same Zarr store.
 
 ##### Virtual Zarr Stores
 
@@ -417,7 +419,56 @@ The [single multiscales asset example](examples/S2A_MSIL2A_20251008T100041_N0511
 
 The `name` field in the `bands` array is used to identify individual bands. Clients need to construct the correct path to access specific arrays based on the multiscales layout.
 
-TODO
+```python
+import zarr
+import json
+
+# Asset href from STAC Item
+asset_href = "s3://bucket/S2A_MSIL2A_20251008T100041.zarr/measurements/reflectance"
+
+# Open the multiscales group
+group = zarr.open_group(asset_href, mode='r')
+
+# Read the multiscales metadata
+multiscales_metadata = group.attrs.get('multiscales', {})
+layout = multiscales_metadata.get('layout', [])
+
+# Discover available resolution levels
+print("Available resolution levels:")
+for level in layout:
+    group_name = level['group']
+    factors = level.get('factors', 'N/A')
+    print(f"  - {group_name}: factors={factors}")
+
+# Select a specific resolution level (e.g., the first level)
+target_level = layout[0]['group']  # e.g., "r10m" or "0"
+
+# Access a specific band at this resolution
+band_name = "b04"  # Red band
+array_path = f"{target_level}/{band_name}"
+red_array = group[array_path]
+
+print(f"\nAccessing {band_name} at resolution level {target_level}:")
+print(f"  Shape: {red_array.shape}")
+print(f"  Dtype: {red_array.dtype}")
+
+# Read data (example: read a subset)
+data_subset = red_array[0:100, 0:100]
+```
+
+Alternatively, for direct array access when the resolution level is known:
+
+```python
+import zarr
+
+# Construct full path to specific array
+asset_href = "s3://bucket/S2A_MSIL2A_20251008T100041.zarr/measurements/reflectance"
+resolution_level = "r10m"  # From multiscales layout
+band_name = "b04"
+
+# Open array directly
+red = zarr.open_array(f"{asset_href}/{resolution_level}/{band_name}", mode='r')
+```
 
 ### CF-Compliant Climate and Weather Data
 
@@ -462,5 +513,3 @@ The [example STAC Item](examples/CMIP6_ScenarioMIP_NCAR_CESM2.json) represents a
 - Assets include both the reference file and source data
 - Role `"reference"` indicates virtual/indirect data access
 - Role `"source"` indicates the underlying data files
-
-
