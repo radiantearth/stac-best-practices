@@ -531,7 +531,7 @@ The [example STAC Item](examples/ICON_d3hp003_cf.json) represents a Zarr store c
 
 ### Virtual Zarr with Reference Files
 
-**Context**: Kerchunk and similar tools create virtual Zarr stores that reference existing data files (e.g., NetCDF) without copying data. This enables Zarr-like access to legacy formats.
+**Context**: [Kerchunk](https://fsspec.github.io/kerchunk/) and [VirtualiZarr](https://virtualizarr.readthedocs.io/) create virtual Zarr stores that reference existing data files (e.g., NetCDF) without copying data. This enables Zarr-like access to legacy formats.
 
 The [example STAC Item](examples/CMIP6_ScenarioMIP_NCAR_CESM2.json) represents a virtual Zarr store defined by a Kerchunk reference file.
 
