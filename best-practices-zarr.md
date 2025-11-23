@@ -1,4 +1,4 @@
-# STAC Zarr and N-Dimensional Array Best Practices
+# STAC Zarr Best Practices
 
 ## Table of Contents
 
