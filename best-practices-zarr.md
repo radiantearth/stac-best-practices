@@ -16,11 +16,11 @@
     - [Resolution based group representation](#resolution-based-group-representation)
     - [Multiscale reflectance group representation](#multiscale-reflectance-group-representation)
   - [CF-Compliant Climate and Weather Data](#cf-compliant-climate-and-weather-data)
-  - [Virtual Zarr with Reference Files](#virtual-zarr-with-reference-files)
+  - [Virtual Zarr Stores](#virtual-zarr-stores)
 
 ## Introduction
 
-This document provides best practices for representing Zarr stores and other n-dimensional array formats in STAC. These guidelines address:
+This document provides best practices for representing Zarr stores (including native Zarr and virtual Zarr stores) in STAC. These guidelines address:
 
 - STAC object types suitable for Zarr stores
 - Asset hierarchy and organization for Zarr groups and arrays
@@ -313,7 +313,7 @@ The Zarr store SHOULD be referenced with a link using the `"store"` relationship
 
 ##### Virtual Zarr Stores
 
-For virtual Zarr stores created using tools like Kerchunk, the link with `rel: store` SHOULD point to the reference file (e.g., JSON file) that defines the virtual Zarr store.
+For virtual Zarr stores (created using tools like Kerchunk or VirtualiZarr), the link with `rel: store` SHOULD point to the entrypoint of the virtual Zarr store. This may be a reference file (e.g., JSON file, Parquet file) or another format that provides the mapping to the underlying data.
 
 #### Media Type
 
@@ -529,15 +529,21 @@ The [example STAC Item](examples/ICON_d3hp003_cf.json) represents a Zarr store c
 - The `bands` array provides human-readable variable descriptions
 - Non-geographic spatial reference system (HEALPix) is indicated
 
-### Virtual Zarr with Reference Files
+### Virtual Zarr Stores
 
-**Context**: [Kerchunk](https://fsspec.github.io/kerchunk/) and [VirtualiZarr](https://virtualizarr.readthedocs.io/) create virtual Zarr stores that reference existing data files (e.g., NetCDF) without copying data. This enables Zarr-like access to legacy formats.
+**Context**: Tools like [Kerchunk](https://fsspec.github.io/kerchunk/) and [VirtualiZarr](https://virtualizarr.readthedocs.io/) create virtual Zarr stores that reference existing data files (e.g., NetCDF, HDF5, GRIB) without copying data. This enables Zarr-like access to legacy formats through a reference system that maps to the original data locations.
 
-The [example STAC Item](examples/CMIP6_ScenarioMIP_NCAR_CESM2.json) represents a virtual Zarr store defined by a Kerchunk reference file.
+Virtual Zarr stores can be represented in both STAC Items and Collections, following the same patterns described in the [STAC Object Type](#stac-object-type) section:
+
+- **STAC Item**: Appropriate when the virtual Zarr store represents a single logical dataset (e.g., a single time slice or scene)
+- **STAC Collection**: Appropriate when organizing multiple related virtual Zarr stores (e.g., time series) or when a single virtual Zarr store contains a time dimension spanning the entire collection
+
+The [example STAC Item](examples/CMIP6_ScenarioMIP_NCAR_CESM2.json) represents a virtual Zarr store for a single dataset.
 
 **Key Points**:
 
-- The kerchunk reference file is considered as the data store and thus is reference as a link with `rel: store`
-- Assets include both the reference file and source data
-- Role `"reference"` indicates virtual/indirect data access
-- Role `"source"` indicates the underlying data files
+- The link with `rel: store` SHOULD point to the entrypoint of the virtual Zarr store (e.g., a reference file)
+- Assets with role `"data"` reference the Zarr groups/arrays accessible through the virtual store
+- Optionally, implementers MAY include assets with role `"source"` to reference the underlying data files
+- The virtual nature of the store is typically abstracted from users, who interact with it like a native Zarr store
+- For Collections, the same principles apply: include a `rel: store` link at the Collection level if all Items share the same virtual store, or at the Item level if each Item has its own virtual store
