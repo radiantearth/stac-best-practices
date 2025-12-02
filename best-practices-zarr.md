@@ -322,7 +322,7 @@ The media type for Zarr should include version information as a parameter:
 
 #### Link Template Relationship
 
-[Link Templates](https://github.com/stac-extensions/link-templates/) CAN be used to refer to arrays that are data variables contained by a zarr group that is referenced by an asset:
+[Link Templates](https://github.com/stac-extensions/link-templates/) CAN be used to refer to data variables contained by a Zarr group that is referenced by an asset:
 
 ```json
 "linkTemplates": [
