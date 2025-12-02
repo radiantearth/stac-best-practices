@@ -152,7 +152,7 @@ In some cases, a single data variable may contain multiple bands along a specifi
 ```json
 "assets": {
   "reflectance": {
-    "href": "s3://bucket/path/data.zarr",
+    "href": "s3://bucket/path/data.zarr/measurements",
     "type": "application/vnd+zarr; version=3",
     "bands": [
     {"name": "reflectance[band=blue]", "eo:common_name": "blue"},
