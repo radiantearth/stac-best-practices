@@ -60,7 +60,7 @@ Conventions terms:
 - **Variable**: A named array
 - **Dimension**: The name of an axis of a multidimensional array (e.g., x, y, time, band)
 - **Coordinate Variable**: A named array that provides coordinate values along a dimension
-- **Data Variable**: An array containing measured or derived data values
+- **Data Variable**: A named array containing measured or derived data values
 
 ## General Rules
 
