@@ -309,7 +309,7 @@ The Zarr store SHOULD be referenced with a link using the `"store"` relationship
 
 ##### Virtual Zarr Stores
 
-For virtual Zarr stores (created using tools like Kerchunk or VirtualiZarr), the link with `rel: store` SHOULD point to the entrypoint of the virtual Zarr store. This may be a reference file (e.g., JSON file, Parquet file) or another format that provides the mapping to the underlying data.
+For virtual Zarr stores (created using tools like Kerchunk or VirtualiZarr), the link with `rel: store` SHOULD point to the entrypoint of the virtual Zarr store. This may be a reference file (e.g., JSON file, Parquet file) or another format (e.g., an icechunk store) that provides the mapping to the underlying data.
 
 #### Media Type
 
