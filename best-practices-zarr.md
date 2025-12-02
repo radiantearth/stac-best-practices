@@ -534,12 +534,15 @@ Virtual Zarr stores can be represented in both STAC Items and Collections, follo
 - **STAC Item**: Appropriate when the virtual Zarr store represents a single logical dataset (e.g., a single time slice or scene)
 - **STAC Collection**: Appropriate when organizing multiple related virtual Zarr stores (e.g., time series) or when a single virtual Zarr store contains a time dimension spanning the entire collection
 
-The [example STAC Item](examples/CMIP6_ScenarioMIP_NCAR_CESM2.json) represents a virtual Zarr store for a single dataset.
+The [example STAC Collection](examples/CMIP6_ScenarioMIP_NCAR_CESM2_collection.json) represents a virtual Zarr store stored as icechunk for a particular model (spanning multiple source NetCDF files)
+
+The [example STAC Item](examples/CMIP6_ScenarioMIP_NCAR_CESM2_item.json) represents a virtual Zarr store stored as kerchunk for a particular NetCDF file.
 
 **Key Points**:
 
 - The link with `rel: store` SHOULD point to the entrypoint of the virtual Zarr store (e.g., a reference file or an icechunk store)
-- Assets with role `"data"` reference the Zarr groups accessible through the virtual store
-- Optionally, implementers MAY include assets with role `"source"` to reference the bucket/directory containing the underlying data files
+- Assets with role `"virtual"` reference the Zarr groups accessible through the virtual store
+- Use [ZEP 8](https://github.com/jbms/url-pipeline) to construct an href pointing to a subgroup within a virtual Zarr store (this is not yet widely supported by tooling)
+- Optionally, implementers MAY include assets with role `"source"` to reference the source file or the bucket/directory containing the underlying data files
 - The virtual nature of the store is typically abstracted from users, who interact with it like a native Zarr store
 - For Collections, the same principles apply: include a `rel: store` link at the Collection level if all Items share the same virtual store, or at the Item level if each Item has its own virtual store
