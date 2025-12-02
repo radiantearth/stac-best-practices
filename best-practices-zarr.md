@@ -77,7 +77,7 @@ A STAC Item is appropriate when the Zarr group represents a particular location 
 - A single time slice of a time series
 - A single multiscale dataset
 
-It is **HIGHLY RECOMMENDED** to reference a unique Zarr store per STAC Item to avoid ambiguity when accessing data via the asset hrefs.
+Each STAC Item in the collection references its own separate Zarr store. This pattern is appropriate when individual scenes or time slices are stored independently, allowing for more flexible data management and access patterns. Each Item's assets reference its unique Zarr store via the [store link](#store-link-relationship).
 
 #### STAC Collection
 
@@ -88,11 +88,7 @@ A STAC Collection is appropriate when the Zarr group represents multiple locatio
 - A set of multiscale datasets for different regions or time periods
 - A collection of Zarr stores representing different variables or measurements
 
-For all of the above use cases, the data can be organized in 2 main ways:
-
-- **Single Zarr Store per Collection**: The entire collection is contained within a single Zarr store. In this case, the data are often organized using additional dimensions (e.g., time) within arrays to organize the data. Assets in the STAC Collection can reference specific groups within the store and use the datacube extension to describe the multidimensional structure.
-
-- **Multiple Zarr Stores per Collection**: Each STAC Item in the collection references its own separate Zarr store. This pattern is appropriate when individual scenes or time slices are stored independently, allowing for more flexible data management and access patterns. Each Item's assets reference its unique Zarr store, following the same organization patterns described in the STAC Item section above.
+The entire collection is contained within a single Zarr store. In this case, the data are often organized using additional dimensions (e.g., time) within arrays to organize the data. Assets in the STAC Collection can reference specific groups within the store and use the datacube extension to describe the multidimensional structure.
 
 ### Asset Organization
 
