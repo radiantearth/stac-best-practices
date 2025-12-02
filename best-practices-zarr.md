@@ -58,7 +58,7 @@ Conventions terms:
 ### Xarray/NetCDF/CF-Specific Concepts
 
 - **Variable**: A named data array within a Zarr group, typically representing a measured or derived quantity
-- **Dimension**: An axis of a multidimensional array (e.g., x, y, time, band)
+- **Dimension**: The name of an axis of a multidimensional array (e.g., x, y, time, band)
 - **Coordinate Variable**: An array that provides coordinate values along a dimension
 - **Data Variable**: An array containing measured or derived data values
 
