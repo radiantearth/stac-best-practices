@@ -149,7 +149,7 @@
     {
       "rel": "store",
       "href": "s3://esa-zarr-sentinel-explorer-fra/tests-output/sentinel-2-l2a/S2A_MSIL2A_20251008T100041_N0511_R122_T32TQM_20251008T122613.zarr",
-      "type": "application/vnd+zarr; version=2",
+      "type": "application/vnd.zarr; version=2",
       "title": "Sentinel-2 L2A Zarr Store"
     },
     {
@@ -166,7 +166,7 @@
   "assets": {
     "SR_10m": {
       "href": "s3://esa-zarr-sentinel-explorer-fra/tests-output/sentinel-2-l2a/S2A_MSIL2A_20251008T100041_N0511_R122_T32TQM_20251008T122613.zarr/measurements/reflectance/r10m",
-      "type": "application/vnd+zarr; version=2",
+      "type": "application/vnd.zarr; version=2",
       "title": "Surface Reflectance - 10m",
       "gsd": 10,
       "bands": [
@@ -206,7 +206,7 @@
     },
     "SR_20m": {
       "href": "s3://esa-zarr-sentinel-explorer-fra/tests-output/sentinel-2-l2a/S2A_MSIL2A_20251008T100041_N0511_R122_T32TQM_20251008T122613.zarr/measurements/reflectance/r20m",
-      "type": "application/vnd+zarr; version=2",
+      "type": "application/vnd.zarr; version=2",
       "title": "Surface Reflectance - 20m",
       "gsd": 20,
       "bands": [
@@ -281,7 +281,7 @@
     },
     "SR_60m": {
       "href": "s3://esa-zarr-sentinel-explorer-fra/tests-output/sentinel-2-l2a/S2A_MSIL2A_20251008T100041_N0511_R122_T32TQM_20251008T122613.zarr/measurements/reflectance/r60m",
-      "type": "application/vnd+zarr; version=2",
+      "type": "application/vnd.zarr; version=2",
       "title": "Surface Reflectance - 60m",
       "gsd": 60,
       "bands": [
