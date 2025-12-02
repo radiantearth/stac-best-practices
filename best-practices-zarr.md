@@ -115,7 +115,7 @@ The entire collection is contained within a single Zarr store. In this case, the
 
 #### Bands Representation
 
-For many applications, it is useful to provide band-level metadata for spectral or multi-channel data stored in Zarr groups. This allows clients to discover available bands and their properties without needing to parse the entire Zarr hierarchy.
+For many applications, it is useful to provide band-level metadata for spectral or multi-channel data stored in Zarr groups. This allows clients to discover available bands and their properties without needing to scan the Zarr hierarchy.
 
 According to the organization of the data in the asset group and child arrays, bands can be represented in different ways described below.
 
