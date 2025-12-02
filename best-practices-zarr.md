@@ -46,7 +46,7 @@ See the [Zarr specification](https://zarr-specs.readthedocs.io/en/latest/v3/core
 
 Key terms:
 
-- **Zarr Store**: A storage system that can hold a Zarr hierarchy (e.g., a directory, zip file, or object store prefix) conforming to the [Zarr abstract store interface](https://zarr-specs.readthedocs.io/en/latest/v3/core/index.html#abstract-store-interface)
+- **Zarr Store**: A storage system that holds a Zarr hierarchy (e.g., a directory, zip file, or object store prefix) conforming to the [Zarr abstract store interface](https://zarr-specs.readthedocs.io/en/latest/v3/core/index.html#abstract-store-interface)
 - **Group**: Any node - including the root node - in a Zarr hierarchy that may have child nodes.
 - **Array**: A leaf node in a Zarr hierarchy that represents a multidimensional array with chunked storage
 - **Chunk**: A contiguous region of an array that is stored as a single object
