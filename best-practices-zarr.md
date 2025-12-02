@@ -111,7 +111,7 @@ The entire collection is contained within a single Zarr store. In this case, the
 
    Individual variable arrays within the store SHOULD NOT be represented as separate assets.
 
-   The appropriate level depends on how users will access the data. Section #bands-representation below provide details on how to represent bands within a Zarr asset.
+   The appropriate level of detail to include within the bands object depends on how users will access the data. Section #bands-representation below provide details on how to represent bands within a Zarr asset.
 
 #### Bands Representation
 
