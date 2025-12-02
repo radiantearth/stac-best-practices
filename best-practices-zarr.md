@@ -66,7 +66,7 @@ Conventions terms:
 
 ### STAC Object Type
 
-Zarr stores and n-dimensional arrays can be represented by 2 STAC object types depending on the use case.
+Zarr groups and arrays can be represented by 2 STAC object types depending on the use case.
 
 #### STAC Item
 
