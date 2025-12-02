@@ -81,7 +81,7 @@ It is **HIGHLY RECOMMENDED** to reference a unique Zarr store per STAC Item to a
 
 #### STAC Collection
 
-A STAC Collection is appropriate when the Zarr store or group represents a collection of related datasets, such as:
+A STAC Collection is appropriate when the Zarr group represents multiple locations in space and/or time, such as:
 
 - A time series of satellite scenes
 - A climate model output spanning multiple time steps
