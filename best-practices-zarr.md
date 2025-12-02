@@ -70,7 +70,7 @@ Zarr groups and arrays can be represented by 2 STAC object types depending on th
 
 #### STAC Item
 
-A STAC Item is appropriate when the Zarr store or group represents a single logical dataset or scene, such as:
+A STAC Item is appropriate when the Zarr group represents a particular location in space and/or time, such as:
 
 - A satellite scene with multiple bands and resolutions
 - A time-specific climate model run output with multiple variables and dimensions
