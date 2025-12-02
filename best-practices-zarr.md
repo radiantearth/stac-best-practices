@@ -542,7 +542,7 @@ The [example STAC Item](examples/CMIP6_ScenarioMIP_NCAR_CESM2.json) represents a
 
 **Key Points**:
 
-- The link with `rel: store` SHOULD point to the entrypoint of the virtual Zarr store (e.g., a reference file)
+- The link with `rel: store` SHOULD point to the entrypoint of the virtual Zarr store (e.g., a reference file or an icechunk store)
 - Assets with role `"data"` reference the Zarr groups/arrays accessible through the virtual store
 - Optionally, implementers MAY include assets with role `"source"` to reference the underlying data files
 - The virtual nature of the store is typically abstracted from users, who interact with it like a native Zarr store
