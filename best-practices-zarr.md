@@ -53,7 +53,7 @@ Key terms:
 
 Conventions terms:
 
-- **Multiscales Group**: A [convention](https://github.com/zarr-conventions/multiscales) for organizing multi-resolution data in Zarr stores, typically using a tree structure where each level represents a different resolution.
+- **Multiscales Group**: A [convention](https://github.com/zarr-conventions/multiscales) for organizing multi-resolution data in Zarr stores, typically using a group of groups structure where each child group represents a different resolution.
 
 ### Xarray/NetCDF/CF-Specific Concepts
 
