@@ -209,7 +209,7 @@ The key point is that the resolution group do not appear directly in the metadat
 ```json
 "assets": {
     "reflectance": {
-      "href": "s3://esa-zarr-sentinel-explorer-fra/tests-output/sentinel-2-l2a/S2A_MSIL2A_20251008T100041_N0511_R122_T32TQM_20251008T122613.zarr/measurements/reflectance",
+      "href": "s3://bucket/path/data.zarr/measurements/reflectance",
       "type": "application/vnd+zarr; version=3; profile=multiscales",
       "title": "Surface Reflectance",
       "gsd": 10,
