@@ -17,7 +17,7 @@ providers can easily use their same ID when they translate their data into STAC.
 It is STRONGLY RECOMMENDED that an item ID is unique per collection.
 The use of URI or file path reserved characters such as `:` or `/` is discouraged since this will
 result in [percented encoded](https://tools.ietf.org/html/rfc3986#section-2) [STAC API](https://github.com/radiantearth/stac-api-spec)
-endpoints and it prevents the use of IDs as file names as recommended in the [catalog layout](#catalog-layout) best practices.
+endpoints and it prevents the use of IDs as file names as recommended in the [catalog layout](best-practices-catalog-and-collection.md#catalog-layout) best practices.
 
 ## Searchable Identifiers
 

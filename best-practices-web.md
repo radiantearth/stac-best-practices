@@ -100,7 +100,7 @@ For data providers using STAC with requester pays buckets, there are two main re
 
 ## Consistent URIs
 
-Links in STAC can be [absolute or relative](#use-of-links).
+Links in STAC can be [absolute or relative](best-practices-catalog-and-collection.md#use-of-links).
 
 Relative links must be resolved against a base URL, which is the absolute URI given in the link with the relation type `self`.
 If a `self` link is not provided, the absolute URI of the resource can be used as the base URL.
