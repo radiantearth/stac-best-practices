@@ -546,3 +546,7 @@ The [example STAC Item](examples/CMIP6_ScenarioMIP_NCAR_CESM2_item.json) represe
 - Optionally, implementers MAY include assets with role `"source"` to reference the source file or the bucket/directory containing the underlying data files
 - The virtual nature of the store is typically abstracted from users, who interact with it like a native Zarr store
 - For Collections, the same principles apply: include a `rel: store` link at the Collection level if all Items share the same virtual store, or at the Item level if each Item has its own virtual store
+
+## Acknowledgments
+
+These best practices were collaboratively developed during the STAC Sprint held at ESA/ESRIN in Frascati, Italy, on October 14-16, 2025. Thank you to all participants who contributed their expertise, insights, and collaborative efforts during this event and in subsequent discussions in PR #29.
