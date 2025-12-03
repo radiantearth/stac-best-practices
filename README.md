@@ -42,3 +42,7 @@ The following best practices are endorsed by the community for each extension in
 
 - [Machine Learning Model Extension](https://github.com/stac-extensions/mlm/blob/main/best-practices.md)
 - [Projection Extension](https://github.com/stac-extensions/projection/blob/main/README.md#best-practices)
+
+## Acknowledgments
+
+These best practices were collaboratively developed during the STAC Sprint held at ESA/ESRIN in Frascati, Italy, on October 14-16, 2025. Thank you to all participants who contributed their expertise, insights, and collaborative efforts during this event and in subsequent discussions in PR #29.
