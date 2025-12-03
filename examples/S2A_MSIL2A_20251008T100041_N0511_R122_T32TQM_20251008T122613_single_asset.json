@@ -1,0 +1,383 @@
+{
+  "type": "Feature",
+  "stac_version": "1.1.0",
+  "stac_extensions": [
+    "https://stac-extensions.github.io/timestamps/v1.1.0/schema.json",
+    "https://stac-extensions.github.io/eo/v1.1.0/schema.json",
+    "https://stac-extensions.github.io/sat/v1.0.0/schema.json",
+    "https://stac-extensions.github.io/projection/v2.0.0/schema.json",
+    "https://stac-extensions.github.io/mgrs/v1.0.0/schema.json",
+    "https://stac-extensions.github.io/grid/v1.1.0/schema.json",
+    "https://stac-extensions.github.io/view/v1.0.0/schema.json",
+    "https://stac-extensions.github.io/processing/v1.2.0/schema.json",
+    "https://stac-extensions.github.io/product/v0.1.0/schema.json",
+    "https://stac-extensions.github.io/scientific/v1.0.0/schema.json",
+    "https://cs-si.github.io/eopf-stac-extension/v1.2.0/schema.json",
+    "https://stac-extensions.github.io/raster/v1.1.0/schema.json"
+  ],
+  "id": "S2A_MSIL2A_20251008T100041_N0511_R122_T32TQM_20251008T122613",
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [11.430710453033498, 42.426911995973605],
+        [12.763136432704886, 42.39088066238852],
+        [12.705562298541299, 41.40403474612011],
+        [11.393460776835221, 41.43884624479472],
+        [11.430710453033498, 42.426911995973605]
+      ]
+    ]
+  },
+  "bbox": [
+    11.393460776835221, 41.40403474612011, 12.763136432704886,
+    42.426911995973605
+  ],
+  "properties": {
+    "gsd": 10.0,
+    "created": "2025-10-08T12:26:13Z",
+    "mission": "copernicus",
+    "sci:doi": "10.5270/S2_-znk9xsj",
+    "updated": "2025-10-08T12:26:13Z",
+    "datetime": "2025-10-08T10:00:41.024000Z",
+    "platform": "sentinel-2a",
+    "grid:code": "MGRS-32TQM",
+    "proj:bbox": [
+      11.393460776835221, 41.40403474612011, 12.763136432704886,
+      42.426911995973605
+    ],
+    "proj:code": "EPSG:32632",
+    "providers": [
+      {
+        "url": "https://commission.europa.eu/",
+        "name": "European Commission",
+        "roles": ["licensor"]
+      },
+      {
+        "url": "https://sentinel.esa.int/web/sentinel/missions/copernicus",
+        "name": "ESA",
+        "roles": ["producer", "processor"]
+      },
+      {
+        "url": "https://zarr.eopf.copernicus.eu/",
+        "name": "EOPF Sentinel Zarr Samples Service",
+        "roles": ["host", "processor"]
+      }
+    ],
+    "published": "2025-10-08T12:26:13Z",
+    "instruments": ["msi"],
+    "end_datetime": "2025-10-08T10:00:41.024000Z",
+    "product:type": "S02MSIL2A",
+    "constellation": "sentinel-2",
+    "eo:snow_cover": 0.000305,
+    "mgrs:utm_zone": 32,
+    "proj:centroid": {
+      "lat": 41.91644,
+      "lon": 12.0732
+    },
+    "eo:cloud_cover": 0.003839,
+    "start_datetime": "2025-10-08T10:00:41.024000Z",
+    "sat:orbit_state": "descending",
+    "eopf:datatake_id": "GS2A_20251008T100041_053773_N05.11",
+    "mgrs:grid_square": "QM",
+    "processing:level": "L2A",
+    "view:sun_azimuth": 163.595949089503,
+    "mgrs:latitude_band": "T",
+    "processing:lineage": "IPF L2A processor",
+    "product:timeliness": "PT3H",
+    "sat:absolute_orbit": 53773,
+    "sat:relative_orbit": 122,
+    "view:sun_elevation": 49.3049375691464,
+    "processing:facility": "ESA",
+    "processing:software": {
+      "Sentinel-2 IPF": " "
+    },
+    "eopf:instrument_mode": "INS-NOBS",
+    "product:timeliness_category": "NRT",
+    "sat:platform_international_designator": "2015-028A"
+  },
+  "links": [
+    {
+      "rel": "collection",
+      "href": "https://stac.core.eopf.eodc.eu/collections/sentinel-2-l2a",
+      "type": "application/json"
+    },
+    {
+      "rel": "parent",
+      "href": "https://stac.core.eopf.eodc.eu/collections/sentinel-2-l2a",
+      "type": "application/json"
+    },
+    {
+      "rel": "root",
+      "href": "https://stac.core.eopf.eodc.eu/",
+      "type": "application/json",
+      "title": "EOPF Sentinel Zarr Samples Service STAC API"
+    },
+    {
+      "rel": "self",
+      "href": "https://stac.core.eopf.eodc.eu/collections/sentinel-2-l2a/items/S2A_MSIL2A_20251008T100041_N0511_R122_T32TQM_20251008T122613",
+      "type": "application/geo+json"
+    },
+    {
+      "rel": "cite-as",
+      "href": "https://doi.org/10.5270/S2_-znk9xsj"
+    },
+    {
+      "rel": "license",
+      "href": "https://sentinel.esa.int/documents/247904/690755/Sentinel_Data_Legal_Notice",
+      "type": "application/pdf",
+      "title": "Legal notice on the use of Copernicus Sentinel Data and Service Information"
+    },
+    {
+      "rel": "xyz",
+      "href": "https://api.explorer.eopf.copernicus.eu/raster/collections/sentinel-2-l2a/items/S2A_MSIL2A_20251008T100041_N0511_R122_T32TQM_20251008T122613/tiles/WebMercatorQuad/{z}/{x}/{y}.png?rescale=0%2C1&color_formula=gamma+rgb+1.3%2C+sigmoidal+rgb+6+0.1%2C+saturation+1.2&variables=%2Fmeasurements%2Freflectance%2Fr60m%3Ab04&variables=%2Fmeasurements%2Freflectance%2Fr60m%3Ab03&variables=%2Fmeasurements%2Freflectance%2Fr60m%3Ab02&bidx=1",
+      "type": "image/png",
+      "title": "Sentinel-2 L2A True Color Image (10m)"
+    },
+    {
+      "rel": "viewer",
+      "href": "https://api.explorer.eopf.copernicus.eu/raster/collections/sentinel-2-l2a/items/S2A_MSIL2A_20251008T100041_N0511_R122_T32TQM_20251008T122613/viewer",
+      "type": "text/html",
+      "title": "Viewer for S2A_MSIL2A_20251008T100041_N0511_R122_T32TQM_20251008T122613"
+    },
+    {
+      "rel": "derived_from",
+      "href": "https://stac.core.eopf.eodc.eu/collections/sentinel-2-l2a/items/S2A_MSIL2A_20251008T100041_N0511_R122_T32TQM_20251008T122613",
+      "type": "application/json",
+      "title": "Derived from original Zarr data"
+    },
+    {
+      "rel": "tilejson",
+      "href": "https://api.explorer.eopf.copernicus.eu/raster/collections/sentinel-2-l2a/items/S2A_MSIL2A_20251008T100041_N0511_R122_T32TQM_20251008T122613/WebMercatorQuad/tilejson.json?variables=%2Fquality%2Fl2a_quicklook%2Fr10m%3Atci&bidx=1&bidx=2&bidx=3&assets=TCI_10m",
+      "type": "application/json",
+      "title": "Tilejson for S2A_MSIL2A_20251008T100041_N0511_R122_T32TQM_20251008T122613"
+    },
+    {
+      "rel": "store",
+      "href": "s3://esa-zarr-sentinel-explorer-fra/tests-output/sentinel-2-l2a/S2A_MSIL2A_20251008T100041_N0511_R122_T32TQM_20251008T122613.zarr",
+      "type": "application/vnd.zarr; version=3",
+      "title": "Zarr Store"
+    }
+  ],
+  "assets": {
+    "reflectance": {
+      "href": "s3://esa-zarr-sentinel-explorer-fra/tests-output/sentinel-2-l2a/S2A_MSIL2A_20251008T100041_N0511_R122_T32TQM_20251008T122613.zarr/measurements/reflectance",
+      "type": "application/vnd.zarr; version=3; profile=multiscales",
+      "title": "Surface Reflectance",
+      "gsd": 10,
+      "proj:code": "EPSG:32632",
+      "proj:shape": [10980, 10980],
+      "bands": [
+        {
+          "name": "b01",
+          "common_name": "coastal",
+          "description": "Coastal aerosol (band 1)",
+          "center_wavelength": 0.443,
+          "full_width_half_max": 0.027,
+          "proj:shape": [1830, 1830],
+          "gsd": 60
+        },
+        {
+          "name": "b02",
+          "common_name": "blue",
+          "description": "Blue (band 2)",
+          "center_wavelength": 0.49,
+          "full_width_half_max": 0.098
+        },
+        {
+          "name": "b03",
+          "common_name": "green",
+          "description": "Green (band 3)",
+          "center_wavelength": 0.56,
+          "full_width_half_max": 0.045
+        },
+        {
+          "name": "b04",
+          "common_name": "red",
+          "description": "Red (band 4)",
+          "center_wavelength": 0.665,
+          "full_width_half_max": 0.038
+        },
+        {
+          "name": "b05",
+          "common_name": "rededge",
+          "description": "Red edge 1 (band 5)",
+          "center_wavelength": 0.704,
+          "full_width_half_max": 0.019,
+          "proj:shape": [5490, 5490],
+          "gsd": 20
+        },
+        {
+          "name": "b06",
+          "common_name": "rededge",
+          "description": "Red edge 2 (band 6)",
+          "center_wavelength": 0.74,
+          "full_width_half_max": 0.018,
+          "proj:shape": [5490, 5490],
+          "gsd": 20
+        },
+        {
+          "name": "b07",
+          "common_name": "rededge",
+          "description": "Red edge 3 (band 7)",
+          "center_wavelength": 0.783,
+          "full_width_half_max": 0.028,
+          "proj:shape": [5490, 5490],
+          "gsd": 20
+        },
+        {
+          "name": "b8A",
+          "common_name": "nir08",
+          "description": "NIR 2 (band 8A)",
+          "center_wavelength": 0.865,
+          "full_width_half_max": 0.033,
+          "proj:shape": [5490, 5490],
+          "gsd": 20
+        },
+        {
+          "name": "b08",
+          "common_name": "nir",
+          "description": "NIR 1 (band 8)",
+          "center_wavelength": 0.842,
+          "full_width_half_max": 0.145
+        },
+        {
+          "name": "b09",
+          "common_name": "nir09",
+          "description": "NIR 3 (band 9)",
+          "center_wavelength": 0.945,
+          "full_width_half_max": 0.026,
+          "proj:shape": [1830, 1830],
+          "gsd": 60
+        },
+        {
+          "name": "b11",
+          "common_name": "swir16",
+          "description": "SWIR 1 (band 11)",
+          "center_wavelength": 1.61,
+          "full_width_half_max": 0.143,
+          "proj:shape": [5490, 5490],
+          "gsd": 20
+        },
+        {
+          "name": "b12",
+          "common_name": "swir22",
+          "description": "SWIR 2 (band 12)",
+          "center_wavelength": 2.19,
+          "full_width_half_max": 0.242,
+          "proj:shape": [5490, 5490],
+          "gsd": 20
+        }
+      ],
+      "cube:dimensions": {
+        "x": {
+          "type": "spatial",
+          "axis": "x",
+          "extent": [699960.0, 809760.0],
+          "reference_system": "EPSG:32632"
+        },
+        "y": {
+          "type": "spatial",
+          "axis": "y",
+          "extent": [4590240.0, 4700040.0],
+          "reference_system": "EPSG:32632"
+        }
+      },
+      "cube:variables": {
+        "b01": {
+          "dimensions": ["y", "x"],
+          "description": "Coastal aerosol (band 1)",
+          "type": "data"
+        },
+        "b02": {
+          "dimensions": ["y", "x"],
+          "description": "Blue (band 2)",
+          "type": "data"
+        },
+        "b03": {
+          "dimensions": ["y", "x"],
+          "description": "Green (band 3)",
+          "type": "data"
+        },
+        "b04": {
+          "dimensions": ["y", "x"],
+          "description": "Red (band 4)",
+          "type": "data"
+        },
+        "b05": {
+          "dimensions": ["y", "x"],
+          "description": "Red edge 1 (band 5)",
+          "type": "data"
+        },
+        "b06": {
+          "dimensions": ["y", "x"],
+          "description": "Red edge 2 (band 6)",
+          "type": "data"
+        },
+        "b07": {
+          "dimensions": ["y", "x"],
+          "description": "Red edge 3 (band 7)",
+          "type": "data"
+        },
+        "b08": {
+          "dimensions": ["y", "x"],
+          "description": "NIR 1 (band 8)",
+          "type": "data"
+        },
+        "b8A": {
+          "dimensions": ["y", "x"],
+          "description": "NIR 2 (band 8A)",
+          "type": "data"
+        },
+        "b09": {
+          "dimensions": ["y", "x"],
+          "description": "NIR 3 (band 9)",
+          "type": "data"
+        },
+        "b11": {
+          "dimensions": ["y", "x"],
+          "description": "SWIR 1 (band 11)",
+          "type": "data"
+        },
+        "b12": {
+          "dimensions": ["y", "x"],
+          "description": "SWIR 2 (band 12)",
+          "type": "data"
+        }
+      },
+      "roles": ["data", "reflectance"]
+    }
+  },
+  "linkTemplates": [
+    {
+      "rel": "data-variable",
+      "title": "Reflectance arrays",
+      "uriTemplate": "s3://esa-zarr-sentinel-explorer-fra/tests-output/sentinel-2-l2a/S2A_MSIL2A_20251008T100041_N0511_R122_T32TQM_20251008T122613.zarr/measurements/reflectance/{resolution}/{band}",
+      "variables": {
+        "resolution": {
+          "description": "Spatial resolution",
+          "type": "string",
+          "enum": ["r10m", "r20m", "r60m", "r120m", "r240m", "r480m"]
+        },
+        "band": {
+          "description": "Band name",
+          "type": "string",
+          "enum": [
+            "b01",
+            "b02",
+            "b03",
+            "b04",
+            "b05",
+            "b06",
+            "b07",
+            "b08",
+            "b8A",
+            "b09",
+            "b11",
+            "b12"
+          ]
+        }
+      }
+    }
+  ],
+  "collection": "sentinel-2-l2a"
+}

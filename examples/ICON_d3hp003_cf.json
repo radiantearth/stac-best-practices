@@ -1,0 +1,127 @@
+{
+  "type": "Feature",
+  "stac_version": "1.1.0",
+  "id": "ICON_d3hp003_P1D_mean_z5_atm",
+  "properties": {
+    "start_datetime": "2020-01-02T00:00:00Z",
+    "end_datetime": "2021-03-01T00:00:00Z"
+  },
+  "links": [
+    {
+      "rel": "store",
+      "href": "s3://bucket/ICON_d3hp003.zarr",
+      "type": "application/vnd.zarr; version=2",
+      "title": "ICON Model Output Zarr Store"
+    }
+  ],
+  "assets": {
+    "P1D_mean_z5_atm": {
+      "href": "s3://bucket/ICON_d3hp003.zarr/P1D_mean_z5_atm",
+      "type": "application/vnd.zarr; version=2",
+      "cube:dimensions": {
+        "time": {
+          "type": "temporal",
+          "description": "time",
+          "extent": ["2020-01-02T00:00:00Z", "2021-03-01T00:00:00Z"],
+          "step": "P1D",
+          "unit": "seconds since 2020-01-01T00:00:00"
+        },
+        "cell": {
+          "type": "spatial",
+          "axis": "cell",
+          "description": "cell index in HEALPix grid",
+          "bbox": [
+            -180.0,
+            -90.0,
+            180.0,
+            90.0
+          ],
+          "reference_system": "HEALPix"
+        },
+        "pressure": {
+          "type": "vertical",
+          "axis": "z",
+          "description": "pressure level",
+          "extent": [5.0, 100000.0],
+          "unit": "Pa"
+        }
+      },
+      "cube:variables": {
+        "clivi": {
+          "dimensions": ["time", "cell"],
+          "type": "data",
+          "unit": "kg m-2",
+          "description": "cloud ice path"
+        },
+        "clt": {
+          "dimensions": ["time", "cell"],
+          "type": "data",
+          "unit": "m2 m-2",
+          "description": "total cloud cover"
+        },
+        "hfls": {
+          "dimensions": ["time", "cell"],
+          "type": "data",
+          "unit": "W m-2",
+          "description": "surface upward latent heat flux"
+        },
+        "pr": {
+          "dimensions": ["time", "cell"],
+          "type": "data",
+          "unit": "kg m-2 s-1",
+          "description": "precipitation flux"
+        },
+        "tas": {
+          "dimensions": ["time", "cell"],
+          "type": "data",
+          "unit": "K",
+          "description": "near-surface air temperature"
+        },
+        "ta": {
+          "dimensions": ["time", "pressure", "cell"],
+          "type": "data",
+          "unit": "K",
+          "description": "air temperature"
+        }
+      },
+      "bands": [
+        {
+          "name": "clivi",
+          "description": "cloud ice path",
+          "cf:standard_name": "atmosphere_mass_content_of_cloud_ice",
+          "unit": "kg m-2",
+        },
+        {
+          "name": "clt",
+          "description": "total cloud cover",
+          "cf:standard_name": "cloud_area_fraction",
+          "unit": "m2 m-2"
+        },
+        {
+          "name": "hfls",
+          "description": "surface upward latent heat flux",
+          "cf:standard_name": "surface_upward_latent_heat_flux",
+          "unit": "W m-2"
+        },
+        {
+          "name": "pr",
+          "description": "precipitation flux",
+          "cf:standard_name": "precipitation_flux",
+          "unit": "kg m-2 s-1"
+        },
+        {
+          "name": "tas",
+          "description": "near-surface air temperature",
+          "cf:standard_name": "air_temperature",
+          "unit": "K"
+        },
+        {
+          "name": "ta",
+          "description": "air temperature",
+          "cf:standard_name": "air_temperature",
+          "unit": "K"
+        }
+      ]
+    }
+  }
+}

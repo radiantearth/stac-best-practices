@@ -23,6 +23,7 @@ in time some of these may evolve to become part of the core specification.
 - [Asset and Link Best Practices](best-practices-asset-and-link.md)
 - [Catalog and Collection Best Practices](best-practices-catalog-and-collection.md)
 - [Metadata and Extension Best Practices](best-practices-metadata-and-extension.md)
+- [Zarr Best Practices](best-practices-zarr.md)
 
 ## STAC API Specification
 

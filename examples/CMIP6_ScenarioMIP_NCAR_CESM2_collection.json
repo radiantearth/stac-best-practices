@@ -1,0 +1,85 @@
+{
+  "type": "Collection",
+  "stac_version": "1.1.0",
+  "stac_extensions": [
+    "https://stac-extensions.github.io/virtual-assets/v1.0.0/schema.json",
+    "https://stac-extensions.github.io/datacube/v2.2.0/schema.json"
+  ],
+  "id": "CMIP6_ScenarioMIP_NCAR_CESM2",
+  "extent": {
+    "spatial": {
+      "bbox": [
+        [
+          -180,
+          -90,
+          180,
+          90
+        ]
+      ]
+    },
+    "temporal": {
+      "interval": [
+        [
+          "1950-01-01T00:00:00Z",
+          "2100-12-31T00:00:00Z"
+        ]
+      ]
+    }
+  },
+  "cube:dimensions": {
+    "time": {
+      "type": "temporal",
+      "extent": ["1950-01-01T00:00:00Z", "2100-12-31T00:00:00Z"]
+    },
+    "lat": {
+      "type": "spatial",
+      "axis": "y",
+      "extent": [-90, 90],
+      "reference_system": 4326
+    },
+    "lon": {
+      "type": "spatial",
+      "axis": "x",
+      "extent": [-180, 180],
+      "reference_system": 4326
+    }
+  },
+  "links": [
+    {
+      "rel": "store",
+      "href": "https://storage.example.com/CMIP6_CESM2.icechunk",
+      "type": "application/vnd.zarr+icechunk",
+      "title": "Virtual Icechunk Store"
+    }
+  ],
+  "assets": {
+    "rlus": {
+      // Use ZEP 8 URL syntax to point to a subgroup within a virtual icechunk store
+      "href": "https://storage.example.com/CMIP6_CESM2.icechunk|icechunk://tag.v5/rlus/|zarr3",
+      "type": "application/vnd.zarr+icechunk",
+      "title": "Surface Upwelling Longwave Radiation",
+      "roles": ["data", "virtual"],
+      "cube:variables": {
+        "rlus": {
+          "type": "data",
+          "dimensions": ["time", "lat", "lon"],
+          "unit": "W m-2",
+          "attrs": {
+            "long_name": "Surface Upwelling Longwave Radiation",
+            "standard_name": "surface_upwelling_longwave_flux_in_air"
+          }
+        }
+      },
+      "vrt:hrefs": [
+        {
+          "key": "source_data"
+        }
+      ]
+    },
+    "source_data": {
+      "href": "https://storage.example.com/data/CMIP6/",
+      "title": "Bucket containing CMIP6 NetCDF files referenced by virtual store",
+      "roles": ["data", "source"]
+    }
+  }
+}
