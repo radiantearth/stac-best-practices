@@ -1,0 +1,102 @@
+{
+  "type": "Feature",
+  "stac_version": "1.1.0",
+  "stac_extensions": [
+    "https://stac-extensions.github.io/virtual-assets/v1.0.0/schema.json",
+    "https://stac-extensions.github.io/datacube/v2.2.0/schema.json"
+  ],
+  "id": "CMIP6_ScenarioMIP_NCAR_CESM2",
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          180,
+          -90
+        ],
+        [
+          180,
+          90
+        ],
+        [
+          -180,
+          90
+        ],
+        [
+          -180,
+          -90
+        ],
+        [
+          180,
+          -90
+        ]
+      ]
+    ]
+  },
+  "bbox": [
+    -180,
+    -90,
+    180,
+    90
+  ],
+  "properties": {
+    "start_datetime": "2015-01-01T00:00:00Z",
+    "end_datetime": "2024-12-31T23:59:59Z",
+    "cube:dimensions": {
+      "time": {
+        "type": "temporal",
+        "extent": ["2015-01-01T00:00:00Z", "2024-12-31T23:59:59Z"]
+      },
+      "lat": {
+        "type": "spatial",
+        "axis": "y",
+        "extent": [-90, 90],
+        "reference_system": 4326
+      },
+      "lon": {
+        "type": "spatial",
+        "axis": "x",
+        "extent": [-180, 180],
+        "reference_system": 4326
+      }
+    }
+  },
+  "links": [
+    {
+      "rel": "store",
+      "href": "https://storage.example.com/CMIP6_CESM2_rlus_kerchunk.json",
+      "type": "application/vnd.zarr+kerchunk",
+      "title": "Virtual Icechunk Store"
+    }
+  ],
+  "assets": {
+    "rlus": {
+      "href": "https://storage.example.com/CMIP6_CESM2_rlus_kerchunk.json",
+      "type": "application/vnd.zarr+kerchunk",
+      "title": "Surface Upwelling Longwave Radiation",
+      "roles": ["data", "virtual"],
+      "cube:variables": {
+        "rlus": {
+          "type": "data",
+          "dimensions": ["time", "lat", "lon"],
+          "unit": "W m-2",
+          "attrs": {
+            "long_name": "Surface Upwelling Longwave Radiation",
+            "standard_name": "surface_upwelling_longwave_flux_in_air"
+          }
+        }
+      },
+      "vrt:hrefs": [
+        {
+          "key": "source_data"
+        }
+      ]
+    },
+    "source_data": {
+      "href": "https://storage.example.com/data/CMIP6/rlus_day_CESM2-WACCM_ssp585_gn_20150101-20241231.nc",
+      "type": "application/netcdf",
+      "title": "CMIP6 NetCDF file referenced by virtual store",
+      "roles": ["data", "source"]
+    }
+  }
+}
