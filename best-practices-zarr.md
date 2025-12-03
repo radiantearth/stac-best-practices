@@ -134,7 +134,7 @@ The most straightforward case is when each data variable corresponds to a unique
   "reflectance": {
     // href pointing to a group within a Zarr store
     "href": "s3://bucket/path/data.zarr/measurements/reflectance/r10m",
-    "type": "application/vnd+zarr; version=3",
+    "type": "application/vnd.zarr; version=3",
     "bands": [
       // band object for the `b02` variable within the `reflectance/r10m` Zarr group
       {"name": "b02", "eo:common_name": "blue"},
@@ -153,7 +153,7 @@ In some cases, a single data variable may contain multiple bands along a specifi
 "assets": {
   "reflectance": {
     "href": "s3://bucket/path/data.zarr/measurements",
-    "type": "application/vnd+zarr; version=3",
+    "type": "application/vnd.zarr; version=3",
     "bands": [
     {"name": "reflectance[band=blue]", "eo:common_name": "blue"},
     {"name": "reflectance[band=green]", "eo:common_name": "green"},
@@ -210,7 +210,7 @@ The key point is that the resolution group do not appear directly in the metadat
 "assets": {
     "reflectance": {
       "href": "s3://bucket/path/data.zarr/measurements/reflectance",
-      "type": "application/vnd+zarr; version=3; profile=multiscales",
+      "type": "application/vnd.zarr; version=3; profile=multiscales",
       "title": "Surface Reflectance",
       "gsd": 10,
       "bands": [
@@ -299,7 +299,7 @@ The Zarr store SHOULD be referenced with a link using the `"store"` relationship
   {
     "rel": "store",
     "href": "s3://bucket/path/data.zarr",
-    "type": "application/vnd+zarr; version=3",
+    "type": "application/vnd.zarr; version=3",
     "title": "Zarr Store"
   }
 ]

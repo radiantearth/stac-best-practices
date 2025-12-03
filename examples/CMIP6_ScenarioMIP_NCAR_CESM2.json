@@ -33,7 +33,7 @@
   "assets": {
     "rlus": {
       "href": "https://storage.example.com/zarr-refs/CMIP6_CESM2_rlus.json",
-      "type": "application/vnd+zarr; version=2",
+      "type": "application/vnd.zarr; version=2",
       "title": "Surface Upwelling Longwave Radiation",
       "roles": ["data"],
       "cube:variables": {

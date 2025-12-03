@@ -10,14 +10,14 @@
     {
       "rel": "store",
       "href": "s3://bucket/ICON_d3hp003.zarr",
-      "type": "application/vnd+zarr; version=2",
+      "type": "application/vnd.zarr; version=2",
       "title": "ICON Model Output Zarr Store"
     }
   ],
   "assets": {
     "P1D_mean_z5_atm": {
       "href": "s3://bucket/ICON_d3hp003.zarr/P1D_mean_z5_atm",
-      "type": "application/vnd+zarr; version=2",
+      "type": "application/vnd.zarr; version=2",
       "cube:dimensions": {
         "time": {
           "type": "temporal",
