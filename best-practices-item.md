@@ -38,7 +38,8 @@ adding fields ask:
 - Does this field tell me how to access the data?
 
 If the purpose of the field is solely to provide information that is not contained within the data, consider putting
-that metadata in a an [Asset Object](https://github.com/radiantearth/stac-spec/blob/master/commons/assets.md#asset-object).
+that metadata in external metadata and link to it or provide it in an
+[Asset Object](https://github.com/radiantearth/stac-spec/blob/master/commons/assets.md#asset-object).
 There is a lot of metadata that is only of relevance
 to loading and processing data, and while STAC does not prohibit providers from putting those type of fields in their items, 
 it is not recommended.
