@@ -220,12 +220,12 @@ _not_ be used, except possibly on the root catalog per the previous section.
 
 ### Should you use relative or absolute hrefs for assets?
 
-If your assets are stored alongside your STAC values, and your catalog uses relative links per the previous section, then
-you should use relative hrefs for assets. This ensures portability of your entire archive and enables access via different
-protocols or through proxies.
+The only case in which you should use relative hrefs for assets is if your assets are stored alongside your STAC values and
+your catalog uses relative links per the previous section. In this case relative hrefs ensure portability of your entire archive
+and enable access via different protocols or through proxies.
 
-If your assets are stored in a separate location, you should use absolute hrefs for assets. This ensures that the assets can
-be accessed regardless of the location of the catalog, and the asset hrefs don't need to be updated even if the catalog is moved.
+If your assets are stored in a separate location, you must use absolute hrefs for assets.
+You should also use absolute hrefs for assets if your catalog uses absolute links.
 
 ### Diagram
 
