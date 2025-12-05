@@ -108,6 +108,10 @@ GeoParquet file containing all the buildings within each particular region. In t
 and each item would contain an asset pointing to the GeoParquet file. Alternatively to distribute a single file that contains
 all the features in a dataset create a collection with one asset at the collection or item level.
 
+> [!NOTE]  
+> This concept is entirely separate from [STAC-GeoParquet](https://radiantearth.github.io/stac-geoparquet-spec/latest/). 
+> STAC-GeoParquet specifies how to represent STAC metadata in the GeoParquet format as opposed to the default JSON.
+
 The [Table extension](https://github.com/stac-extensions/table) has proven to be useful to describe the contents
 of those file formats and should be provided within the asset metadata.
 
