@@ -232,7 +232,7 @@ You should also use absolute hrefs for assets if your catalog uses absolute link
 Here's a summary of the best practices recommended above, in diagram form:
 
 ```mermaid
-graph LR
+graph TD
     a["Is my catalog available from a single url?"]@{ shape: decision }
     b["Use a self link on the root catalog"]
     c["No self link on the root catalog"]
