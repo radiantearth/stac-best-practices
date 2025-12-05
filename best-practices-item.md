@@ -105,7 +105,8 @@ Many implementors are tempted to use STAC to describe vector layers, putting a [
 file as the asset. This has proven to be useful as long as the asset represents a group of features rather
 than one particular feature. For instance this could be a useful way to distribute a buildings dataset where there is one
 GeoParquet file containing all the buildings within each particular region. In that case there would be an item for each region
-and each item would contain an asset pointing to the GeoParquet file. Alternatively to distribute a single file that contains
+and each item would contain an asset pointing to the GeoParquet file. To ensure that people can find the item of interest, be sure
+to include the bounding box and geometry footprint in the STAC metadata for each item. Alternatively to distribute a single file that contains
 all the features in a dataset create a collection with one asset at the collection or item level.
 
 > [!NOTE]  
@@ -114,6 +115,9 @@ all the features in a dataset create a collection with one asset at the collecti
 
 The [Table extension](https://github.com/stac-extensions/table) has proven to be useful to describe the contents
 of those file formats and should be provided within the asset metadata.
+
+To facilitate visualization, it can be useful to include an asset that refers to a [PMTiles](https://github.com/protomaps/PMTiles) 
+representation of each group of vectors. This asset would have the role "visual" and would exist alongside the "data" assets.
 
 If you want the individual vectors to be accessible individually, the ideal approach
 is to serve it with [OGC API - Features](https://github.com/opengeospatial/ogcapi-features) standard. This
