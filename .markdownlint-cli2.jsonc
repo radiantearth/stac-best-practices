@@ -1,0 +1,7 @@
+{
+  "globs": ["*.md"],
+  "config": {
+    "MD013": false,
+    "MD059": false,
+  },
+}
