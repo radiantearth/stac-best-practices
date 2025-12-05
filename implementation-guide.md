@@ -4,10 +4,9 @@
 
 - [How to Differentiate STAC Files](#how-to-differentiate-stac-files)
 
-
 ## How to Differentiate STAC Files
 
-Any tool that crawls a STAC implementation or encounters a STAC file in the wild needs a clear way to determine if it is an Item, 
+Any tool that crawls a STAC implementation or encounters a STAC file in the wild needs a clear way to determine if it is an Item,
 Collection or Catalog. As of 1.0.0 this is done primarily
 with the `type` field, and secondarily in Items with `stac_version`, or optionally with the `rel` of the link to it.
 

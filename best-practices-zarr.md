@@ -107,7 +107,7 @@ The entire collection is contained within a single Zarr store. In this case, the
 >[!NOTE]
 > The proposed `profile` parameter is not an official part of the Zarr media type specification but is suggested here to enhance clarity regarding the data model used within the Zarr store.
 
-3. **Bands within an asset SHALL reference available bands in a multispectral/multi-channel Zarr group**
+1. **Bands within an asset SHALL reference available bands in a multispectral/multi-channel Zarr group**
 
    Individual variable arrays within the store SHOULD NOT be represented as separate assets.
 
@@ -364,13 +364,13 @@ The media type for Zarr should include version information as a parameter:
 
   If the referenced Zarr store follows the [geo-proj convention](https://github.com/zarr-conventions/geo-proj), the projection information should be consistent with the convention.
 
-3. **[Raster Extension](https://github.com/stac-extensions/raster) >=v2.0.0 SHOULD be used for raster-like arrays**
-  
+1. **[Raster Extension](https://github.com/stac-extensions/raster) >=v2.0.0 SHOULD be used for raster-like arrays**
+
    - `raster:spatial_resolution`
    - `raster:scale` and `raster:offset` (if applicable)
    - `data_type` and `nodata`
 
-4. **[CF Extension](https://github.com/stac-extensions/cf) SHOULD be used for climate and forecast data following CF conventions**
+2. **[CF Extension](https://github.com/stac-extensions/cf) SHOULD be used for climate and forecast data following CF conventions**
 
    For data following CF conventions (Climate and Forecast), relevant attributes like `standard_name`, `units`, and `cell_methods` should be represented in STAC metadata.
 
@@ -525,7 +525,7 @@ The [example STAC Item](examples/ICON_d3hp003_cf.json) represents a Zarr store c
 - The `bands` array provides human-readable variable descriptions
 - Non-geographic spatial reference system (HEALPix) is indicated
 
-### Virtual Zarr Stores
+### Representing Virtual Zarr Stores
 
 **Context**: Tools like [Kerchunk](https://fsspec.github.io/kerchunk/) and [VirtualiZarr](https://virtualizarr.readthedocs.io/) create virtual Zarr stores that reference existing data files (e.g., NetCDF, HDF5, GRIB) without copying data. This enables Zarr-like access to legacy formats through a reference system that maps to the original data locations.
 
