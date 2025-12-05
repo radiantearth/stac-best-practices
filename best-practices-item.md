@@ -100,15 +100,18 @@ use cases.
 
 ## Representing Vector Layers in STAC
 
-Many implementors are tempted to use STAC to describe vector layers, putting a [geoparquet](https://geoparquet.org/) or 
-[flatgeobuff](https://flatgeobuf.org/) or shapefile or [geopackage](http://geopackage.org)
+Many implementors are tempted to use STAC to describe vector layers, putting a [GeoParquet](https://geoparquet.org/) or 
+[FlatGeobuf](https://flatgeobuf.org/) or Shapefile or [GeoPackage](https://www.geopackage.org/)
 file as the asset. This has proven to be useful as long as the asset represents a group of features rather
 than one particular feature. For instance this could be a useful way to distribute a buildings dataset where there is one
-geoparquet file containing all the buildings within each particular region. In that case there would be an item for each region
-and each item would contain an asset pointing to the geoparquet file. Alternatively to distribute a single file that contains
-all the features in a dataset create a collection with one asset at the collection level and no items.
+GeoParquet file containing all the buildings within each particular region. In that case there would be an item for each region
+and each item would contain an asset pointing to the GeoParquet file. Alternatively to distribute a single file that contains
+all the features in a dataset create a collection with one asset at the collection or item level.
+
+The [Table extension](https://github.com/stac-extensions/table) has proven to be useful to describe the contents
+of those file formats and should be provided within the asset metadata.
 
 If you want the individual vectors to be accessible individually, the ideal approach
 is to serve it with [OGC API - Features](https://github.com/opengeospatial/ogcapi-features) standard. This
-allows each feature in the dataset (geoparquet, flatgeobuff, shapefile, geopackage, ...) to be represented online, and enables 
-querying of the actual data. This Features API can be referenced within STAC by creating a Link to it at the Collection level.
+allows each feature in the dataset (GeoParquet, Shapefile, etc.) to be represented online, and enables 
+querying of the actual data. This Features API can be referenced within STAC by creating a Link to it alongside the source file.
