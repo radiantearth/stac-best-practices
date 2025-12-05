@@ -235,7 +235,7 @@ Here's a summary of the best practices recommended above, in diagram form:
 graph LR
     a["Is my catalog available from a single url?"]@{ shape: decision }
     b["Use a self link on the root catalog"]
-    c["Root catalog has no self link"]
+    c["No self link on the root catalog"]
     d["Use relative links"]
     e["Use absolute links"]
     f["Use relative asset hrefs"]
