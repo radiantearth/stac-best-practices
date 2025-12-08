@@ -124,12 +124,11 @@ canonical 'rel' link should be used to designate the primary location of the Ite
 
 ### Mixing STAC Versions
 
-Although it is allowed to mix STAC versions, it should be used carefully as clients may not support all versions so that 
-the catalog could be of limited use to users. A Catalog or Collection linking to differently versioned Sub-Catalogs or Sub-Collections
-is a common use case when multiple data source are combined. Client developers should be aware of this use case. Nevertheless, it 
-is strongly recommended that Catalogs don't contain differently versioned Items so that users/clients can at least use and/or download
-consistent (Sub-)Catalogs containing either all or no data. Collections that are referenced from Items should always use the same
-STAC version. Otherwise some behaviour of functionality may be unpredictable (e.g. merging common fields into Items or reading summaries).
+Although it is allowed to mix STAC versions, it should be avoided. 
+
+Sometimes mixed STAC versions are unavoidable when multiple catalogs or collections from different sources are combined
+into a single Catalog. This is ok as long as the version is consistent within any given Collection.
+Otherwise some behaviours may be unpredictable (e.g. merging common fields into Items or reading summaries).
 
 ## Using Summaries in Collections
 
