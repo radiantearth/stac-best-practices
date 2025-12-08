@@ -34,10 +34,9 @@ In versions of STAC prior to 1.0 the process was a bit more complicated, as ther
 See [this issue comment](https://github.com/radiantearth/stac-spec/issues/889#issuecomment-684529444) for a heuristic that works
 for older STAC versions.
 
-
 ## Mixing STAC Versions
 
-Although it is not recommended to mix STAC versions, it is allowed. Sometimes mixed STAC Versions are unavoidable 
-when multiple catalogs or collections from different sources are combined into a single Catalog. 
+Although it is not recommended to mix STAC versions, it is allowed. Sometimes mixed STAC Versions are unavoidable
+when multiple catalogs or collections from different sources are combined into a single Catalog.
 
 Client and Server developers should be aware of this use case.

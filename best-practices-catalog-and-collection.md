@@ -121,7 +121,7 @@ canonical 'rel' link should be used to designate the primary location of the Ite
 
 ### Mixing STAC Versions
 
-Although it is allowed to mix STAC versions, it should be avoided. 
+Although it is allowed to mix STAC versions, it should be avoided.
 
 Sometimes mixed STAC versions are unavoidable when multiple catalogs or collections from different sources are combined
 into a single Catalog. This is ok as long as the version is consistent within any given Collection.
