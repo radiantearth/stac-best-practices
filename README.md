@@ -1,5 +1,10 @@
 # STAC Best Practices
 
+> [!WARNING]
+> This repository is an early version based on the stac-spec best practices and is currently getting an overhaul.
+>
+> Feedback is always welcome, ideally via GitHub issues or pull requests.
+
 This repository contains the STAC Best Practices. 
 
 This repository makes a number of recommendations for creating real world SpatioTemporal Asset Catalogs. None of them 
