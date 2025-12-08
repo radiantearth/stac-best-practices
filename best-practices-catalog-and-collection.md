@@ -126,11 +126,9 @@ canonical 'rel' link should be used to designate the primary location of the Ite
 
 Although it is allowed to mix STAC versions, it should be avoided. 
 
-Sometimes mixed STAC Versions are unavoidable when multiple catalogs or collections from different sources are combined
+Sometimes mixed STAC versions are unavoidable when multiple catalogs or collections from different sources are combined
 into a single Catalog. This is ok as long as the version is consistent within any given Collection.
-
-In particular Items should always use the same STAC version as their parent Collection. Otherwise some behaviours may be 
-unpredictable (e.g. merging common fields into Items or reading summaries).
+Otherwise some behaviours may be unpredictable (e.g. merging common fields into Items or reading summaries).
 
 ## Using Summaries in Collections
 

@@ -41,4 +41,4 @@ for older STAC versions.
 Although it is not recommended to mix STAC versions, it is allowed. Sometimes mixed STAC Versions are unavoidable 
 when multiple catalogs or collections from different sources are combined into a single Catalog. 
 
-Client developers should be aware of this use case.
+Client and Server developers should be aware of this use case.
