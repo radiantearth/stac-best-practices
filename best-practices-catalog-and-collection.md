@@ -290,11 +290,11 @@ semantics for keeping and accessing previous versions of Collections and Items. 
 catalogs to preserve previous versions of the documents and link them together.
 
 In order to achieve this, the static catalog must make sure that for every record created, a copy of the record is also
-created in a separate location and it is named with the version id adopted by the catalog. See
-[here](https://github.com/stac-extensions/version/blob/main/README.md#version-id) for recommendations on versioning schema.
+created in a separate location and it is named with the version id adopted by the catalog. See the
+[Version extension's recommendations on versioning schema](https://github.com/stac-extensions/version/blob/main/README.md#version-id).
 
-The main record should also provide a link to the versioned record following the linking patterns described
-[here](https://github.com/stac-extensions/version/blob/main/README.md#relation-types). For every update to the record, the same
+The main record should also provide a link to the versioned record following the
+[Version extension's relation types linking patterns](https://github.com/stac-extensions/version/blob/main/README.md#relation-types). For every update to the record, the same
 cycle is repeated:
 
 1. Add link from the updated record to the previous version
