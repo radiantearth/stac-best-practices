@@ -25,7 +25,7 @@ So to enable all the great web tools (like [stacindex.org](http://stacindex.org)
 [Google Cloud Storage](https://cloud.google.com/storage/docs/cross-origin), or [Apache Server](https://enable-cors.org/server_apache.html).
 Many more are listed on [enable-cors.org](https://enable-cors.org/server.html). We recommend enabling CORS for all requests ('\*'),
 so that diverse online tools can access your data. If you aren't sure if your server has CORS enabled you can use
-[test-cors.org](https://www.test-cors.org/). Enter the URL of your STAC root [Catalog](https://github.com/radiantearth/stac-spec/blob/master/catalog-spec/catalog-spec.md) or
+[cors-test.codehappy.dev](https://cors-test.codehappy.dev/). Enter the URL of your STAC root [Catalog](https://github.com/radiantearth/stac-spec/blob/master/catalog-spec/catalog-spec.md) or
 [Collection](https://github.com/radiantearth/stac-spec/blob/master/collection-spec/collection-spec.md) JSON and make sure it gets a response.
 
 ## STAC on the Web

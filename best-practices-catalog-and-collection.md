@@ -22,14 +22,14 @@ which can be any mix of Catalogs, Collections, and Items._
 
 ## Static and Dynamic Catalogs
 
-As mentioned in the main [overview](overview.md), there are two main types of catalogs - static
+As mentioned in the main [overview](https://github.com/radiantearth/stac-spec/blob/master/overview.md), there are two main types of catalogs - static
 and dynamic. This section explains each of them in more depth and shares some best practices on each.
 
 ### Static Catalogs
 
 A static catalog is an implementation of the STAC specification that does not respond dynamically to requests. It is simply
 a set of files on a web server that link to one another in a way that can be crawled, often stored in an cloud storage
-service like [Amazon S3](https://aws.amazon.com/s3/), [Azure Storage](https://azure.microsoft.com/en-us/services/storage/) and
+service like [Amazon S3](https://aws.amazon.com/s3/), [Azure Storage](https://learn.microsoft.com/en-us/azure/storage/common/storage-introduction) and
 [Google Cloud Storage](https://cloud.google.com/storage/). But any http server could expose a static catalog as files.
 The core JSON documents and link structures are encoded in the file, and work as long as things are structured properly.
 A static catalog can only really be crawled by search engines and active catalogs; it can not respond to queries.
@@ -162,7 +162,7 @@ Some general thinking on what to summarize is as follows:
   So if the values contained in the array are independently meaningful (not interconnected) and there aren't hundreds of potential
   values then it is likely a good candidate to summarize.
 
-We do highly recommend including a [`bands`](./commons/common-metadata.md#bands)
+We do highly recommend including a [`bands`](https://github.com/radiantearth/stac-spec/blob/master/commons/common-metadata.md#bands)
 summary if your Items implement `bands`,
 especially if it represents just one satellite or constellation. This should be a union of all the potential bands that you
 have in assets. It is ok to only add the summary at the Collection level without putting `bands` at the

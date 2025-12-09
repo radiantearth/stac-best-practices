@@ -45,7 +45,7 @@ to loading and processing data, and while STAC does not prohibit providers from 
 it is not recommended.
 
 For more information on what fields to include and where to include them in the STAC hierarchy, read the
-[Metadata and Extension Best Practices](best-practices-metadata-and-extensions.md).
+[Metadata and Extension Best Practices](best-practices-metadata-and-extension.md).
 
 ## Datetime selection
 
