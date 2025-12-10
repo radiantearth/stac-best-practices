@@ -1,8 +1,7 @@
 # STAC Best Practices
 
 > [!WARNING]
-> This repository is a very early version and not officially endorsed by the STAC PSC yet.
-> We plan to also move the best practices from the official stac-spec and stac-api-spec repositories over to this repository in the future.
+> This repository is an early version based on the stac-spec best practices and is currently getting an overhaul.
 >
 > Feedback is always welcome, ideally via GitHub issues or pull requests.
 
