@@ -10,14 +10,17 @@
   - [Mixing STAC Versions](#mixing-stac-versions)
 - [Using Summaries in Collections](#using-summaries-in-collections)
 - [Use of links](#use-of-links)
-  - [Self-contained Catalogs](#self-contained-catalogs)
-  - [Published Catalogs](#published-catalogs)
+  - [Should your root catalog have a `self` link?](#should-your-root-catalog-have-a-self-link)
+  - [Should you use relative or absolute links?](#should-you-use-relative-or-absolute-links)
+  - [Should you use relative or absolute hrefs for assets?](#should-you-use-relative-or-absolute-hrefs-for-assets)
+  - [Diagram](#diagram)
 - [Using Relation Types](#using-relation-types)
+  - [Derived from relation (`derived_from`)](#derived-from-relation-derived_from)
 - [Versioning for Catalogs](#versioning-for-catalogs)
+  - [Example](#example)
 - [Static to Dynamic best practices](#static-to-dynamic-best-practices)
   - [Ingestion and links](#ingestion-and-links)
   - [Keep catalogs in sync with cloud notification and queue services](#keep-catalogs-in-sync-with-cloud-notification-and-queue-services)
-
 
 *Note: This section uses the term 'Catalog' (with an uppercase C) to refer to the JSON entity specified in the 
 [Catalog spec](https://github.com/radiantearth/stac-spec/blob/master/catalog-spec/catalog-spec.md), and 'catalog' (with a lowercase c) to refer to any full STAC implementation, 
