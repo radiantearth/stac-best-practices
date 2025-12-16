@@ -10,14 +10,17 @@
   - [Mixing STAC Versions](#mixing-stac-versions)
 - [Using Summaries in Collections](#using-summaries-in-collections)
 - [Use of links](#use-of-links)
-  - [Self-contained Catalogs](#self-contained-catalogs)
-  - [Published Catalogs](#published-catalogs)
+  - [Should your root catalog have a `self` link?](#should-your-root-catalog-have-a-self-link)
+  - [Should you use relative or absolute links?](#should-you-use-relative-or-absolute-links)
+  - [Should you use relative or absolute hrefs for assets?](#should-you-use-relative-or-absolute-hrefs-for-assets)
+  - [Diagram](#diagram)
 - [Using Relation Types](#using-relation-types)
+  - [Derived from relation (`derived_from`)](#derived-from-relation-derived_from)
 - [Versioning for Catalogs](#versioning-for-catalogs)
+  - [Example](#example)
 - [Static to Dynamic best practices](#static-to-dynamic-best-practices)
   - [Ingestion and links](#ingestion-and-links)
   - [Keep catalogs in sync with cloud notification and queue services](#keep-catalogs-in-sync-with-cloud-notification-and-queue-services)
-
 
 *Note: This section uses the term 'Catalog' (with an uppercase C) to refer to the JSON entity specified in the 
 [Catalog spec](https://github.com/radiantearth/stac-spec/blob/master/catalog-spec/catalog-spec.md), and 'catalog' (with a lowercase c) to refer to any full STAC implementation, 
@@ -203,19 +206,9 @@ next two sections.
 
 ### Should you use relative or absolute links?
 
-As described above, if your root catalog does not have a `self` link, then all links and assets hrefs should be relative.
-
-If your root catalog does have a `self` link, then you should decide how often your catalog will be copied or moved. If the
-catalog's location is fixed at a single location, e.g. as a canonical metadata reference for a geospatial asset archive,
-then absolute links are appropriate. This enables downstream tools to more quickly traverse the catalog structure without
-having to resolve links relative to the root href. Additionally, if you are using absolute links for your entire catalog,
-every value in the catalog should have a `self` link.
-
-If your catalog is intended to be copied, if you anticipate changing its location, or if it might be served via
-different protocols (e.g. via a blob storage and via http) or through a proxy, then relative links should be used. This
-enables portability and usability regardless of the URL used to access the catalog. If the catalog is later moved, only
-a single link (the root catalog's `self` link) needs to be updated. Relative links imply that `self` links should
-_not_ be used, except possibly on the root catalog per the previous section.
+The answer to this question depends on whether you're building a [static catalog](#static-catalogs) or a [dynamic catalog](#dynamic-catalogs).
+**Static catalogs** should use relative links, as they are more likely to be copied or served via different root urls.
+**Dynamic catalogs** should use absolute links, since those links are generally auto-generated from the API's root url.
 
 ### Should you use relative or absolute hrefs for assets?
 
@@ -239,15 +232,15 @@ graph TD
     e["Use absolute links"]
     f["Use relative asset hrefs"]
     g["Use absolute asset hrefs"]
-    h["Will my catalog be copied or moved?"]@{ shape: decision }
+    h["Is my catalog static or dynamic?"]@{ shape: decision }
     i["Will assets always live alongside my items?"]@{ shape: decision }
 
     a -- yes --> b
     a -- no --> c
     c --> d
     b --> h
-    h -- yes --> d
-    h -- no --> e
+    h -- static --> d
+    h -- dynamic --> e
     d --> i
     i -- yes --> f
     i -- no --> g
