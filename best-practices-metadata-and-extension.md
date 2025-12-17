@@ -47,18 +47,14 @@ Two behavioral extensions are recommended that don't describe the data itself bu
 
 - **Storage Extension** (v2.x)
 
-  - Throughout the whole implementation, all entries in `assets` should provide a `storage:refs` whenever a cloud storage needs to be accessed that needs a different access mechanism than HTTP.
-    `storage:refs` refers to `storage:schemes`, which has to be provided in the same file.
-
-    Note that the Storage Extension is still evolving and has a limited set of cloud stores defined.
-    Please open a PR if your cloud store is not available yet.
+  - [See the Storage Extension Guide](best-practices-storage-extension.md)
 
 ### Datacubes
 
 If a datacube file format (e.g. netCDF, ZARR, GRIB) is exposed, the following is recommended:
 
 - **Datacube Extension** (v2.x)
-  
+
   - For a single variable: `cube:dimensions` only
   - For multiple variables: `cube:variables` and `cube:dimensions`
 
@@ -76,21 +72,22 @@ Items should be generated so that each item reflects a specific timestamp that i
 Each asset that points to measurements should provide the fields defined below.
 
 - **Common metadata**
-  
+
   - `data_type`
   - `nodata` (if applicable)
   - `unit` (if applicable)
-  
+
 - **Projection Extension** (v2.x)
-  
+
   - `proj:code`, or alternatively `proj:wkt2` or `proj:projjson` if no code is available for the CRS.
-  
+
     `proj:code` can be set to `null` if one of the other two fields is provided.
     `proj:wkt2` and `proj:projjson` should never be set to `null`.
+
   - Two of the following: `proj:shape`, `proj:transform`, `proj:bbox`.
-  
+
     `proj:bbox` should be omitted if the values match `bbox` property exactly (i.e. if `proj:code` "is a geographic coordinate reference system, using the World Geodetic System 1984 (WGS 84) datum, with longitude and latitude units of decimal degrees" (see [RFC 7946, ch. 4](https://datatracker.ietf.org/doc/html/rfc7946#section-4)).
-  
+
 - **Raster Extension** (v2.x)
 
   - `raster:spatial_resolution` (if multiple resolutions are provided in the item, otherwise specify it in the Item)
@@ -103,26 +100,28 @@ Each asset that points to measurements should provide the fields defined below.
 - **Classification Extension** (v2.x)
 
   The Classification Extension should only be provided for **categorical data**.
-  
+
   - `classification:classes`
   - `classification:bitfields` (if applicable)
 
 ### Spectral Measurements
 
 - **Common metadata**
-  
+
   - `bands` (in the order as they should appear in the datacube)
+
 - **Electro Optical (EO) Extension** (v2.x)
-  
+
   - `name`
-  
+
     For users of the datacube extension, the names should also be provided as the `values` for the band dimension.
+
   - `eo:common_name` (if applicable)
   - `eo:center_wavelength` and `eo:full_width_half_max`
 
 ### SAR Measurements
 
-- **SAR Extension**  (v1.2 or a later non-breaking version)
+- **SAR Extension** (v1.2 or a later non-breaking version)
   - `sar:polarizations` (in the order as they should appear in the datacube)
 
 ### Other Measurements
@@ -139,12 +138,12 @@ Collections should contain as much information as possible to allow datacubes to
 
 - Exact **spatial and temporal extents** (if not provided through the datacube extension)
 - **Datacube extension**
-  
-  The datacube extension can be used to indicate how to construct the datacube even for non-datacube data. 
-  *Note: Usually only extents can be provided but no specific dimension labels.*
+
+  The datacube extension can be used to indicate how to construct the datacube even for non-datacube data.
+  _Note: Usually only extents can be provided but no specific dimension labels._
+
 - **Bands** (`bands`, providing the union of all available bands)
 - **Item Assets** (`item_assets`)
-
 
 > [!CAUTION]
 > Unless the properties summarize the Item Properties, the properties (e.g. bands or the datacube fields) should be provided on the top-level and **not** in summaries.
