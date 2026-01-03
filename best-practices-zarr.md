@@ -305,7 +305,7 @@ The Zarr store SHOULD be referenced with a link using the `"store"` relationship
 ]
 ```
 
-> [!IMPORTANT] This best practice assumes that all assets referenced in the STAC object are contained within the same Zarr store.
+>[!IMPORTANT] This best practice assumes that all assets referenced in the STAC object are contained within the same Zarr store.
 
 ##### Virtual Zarr Stores
 

@@ -1,5 +1,3 @@
-# See https://pre-commit.com for more information
-# See https://pre-commit.com/hooks.html for more hooks
 repos:
   - repo: "https://github.com/pre-commit/pre-commit-hooks"
     rev: v6.0.0
@@ -8,12 +6,46 @@ repos:
       - id: end-of-file-fixer
       - id: check-yaml
       - id: check-added-large-files
-  - repo: https://github.com/DavidAnson/markdownlint-cli2
-    rev: v0.19.1
+  - repo: local
     hooks:
-      - id: markdownlint-cli2
-  - repo: https://github.com/tcort/markdown-link-check
-    rev: v3.14.2
-    hooks:
-      - id: markdown-link-check
-        args: [-q]
+      - id: remarklint
+        name: remarklint
+        language: node
+        entry: remark
+        types: [markdown]
+        args: ["--frail", "--quiet", "-r", "remark.yaml"]
+        additional_dependencies:
+          [
+            remark,
+            remark-lint,
+            remark-cli,
+            remark-gfm,
+            remark-preset-lint-recommended,
+            remark-lint-no-html,
+            remark-lint-emphasis-marker,
+            remark-lint-no-undefined-references,
+            remark-lint-hard-break-spaces,
+            remark-lint-blockquote-indentation,
+            remark-lint-no-consecutive-blank-lines,
+            remark-lint-fenced-code-flag,
+            remark-lint-fenced-code-marker,
+            remark-lint-no-shell-dollars,
+            remark-lint-code-block-style,
+            remark-lint-heading-increment,
+            remark-lint-no-multiple-toplevel-headings,
+            remark-lint-maximum-heading-length,
+            remark-lint-heading-style,
+            remark-lint-list-item-bullet-indent,
+            remark-lint-ordered-list-marker-style,
+            remark-lint-ordered-list-marker-value,
+            remark-lint-checkbox-character-style,
+            remark-lint-no-shortcut-reference-link,
+            remark-lint-unordered-list-marker-style,
+            remark-lint-list-item-indent,
+            remark-lint-table-pipes,
+            remark-lint-no-literal-urls,
+            remark-preset-lint-consistent,
+            remark-preset-lint-markdown-style-guide,
+            remark-preset-lint-recommended,
+            remark-validate-links,
+          ]
