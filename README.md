@@ -44,28 +44,14 @@ The following best practices are endorsed by the community for each extension in
 
 ## Contributing
 
-We use [markdownlint-cli2](https://github.com/DavidAnson/markdownlint-cli2) to lint our markdown files.
-To run it locally:
-
-```sh
-npm install markdownlint-cli2 --global
-markdownlint-cli2
-```
-
-To auto-fix some lint errors:
-
-```sh
-markdownlint-cli2 --fix
-```
-
-We use [prek](https://prek.j178.dev/) to run our linting tools in CI.
-If you'd like to use it locally, [install it](https://github.com/j178/prek?tab=readme-ov-file#installation), then:
+We use [prek](https://prek.j178.dev/) to run our linting tools.
+To run it locally, [install it](https://github.com/j178/prek?tab=readme-ov-file#installation), then:
 
 ```sh
 prek run --all-files
 ```
 
-To automatically run **prek** on your commits:
+To automatically run **prek** on every new local commit:
 
 ```sh
 prek install
