@@ -116,8 +116,8 @@ all the features in a dataset create a collection with one asset at the collecti
 The [Table extension](https://github.com/stac-extensions/table) has proven to be useful to describe the contents
 of those file formats and should be provided within the asset metadata.
 
-To facilitate visualization, it can be useful to include an asset that refers to a [PMTiles](https://github.com/protomaps/PMTiles) 
-representation of each group of vectors. This asset would have the role "visual" and would exist alongside the "data" assets.
+To facilitate visualization, it can be useful to include a link that refers to a [PMTiles](https://github.com/protomaps/PMTiles) 
+representation of each group of vectors.
 
 If you want the individual vectors to be accessible individually, the ideal approach
 is to serve it with [OGC API - Features](https://github.com/opengeospatial/ogcapi-features) standard. This
