@@ -44,15 +44,9 @@ The following best practices are endorsed by the community for each extension in
 
 ## Contributing
 
-We use [prek](https://prek.j178.dev/) to run our linting tools.
-To run it locally, [install it](https://github.com/j178/prek?tab=readme-ov-file#installation), then:
+We use [remark-lint](https://github.com/remarkjs/remark-lint) to check the markdown files.
+To run it:
 
 ```sh
-prek run --all-files
-```
-
-To automatically run **prek** on every new local commit:
-
-```sh
-prek install
+npx remark *.md
 ```
