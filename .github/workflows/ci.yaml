@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Lint
+        run: >
+          npx --yes --package remark-cli
+          --package remark-gfm
+          --package remark-validate-links
+          --package remark-preset-lint-consistent
+          --package remark-preset-lint-recommended
+          --package remark-lint-no-html
+          --package remark-lint-emphasis-marker
+          --package remark-lint-no-undefined-references
+          --package remark-lint-hard-break-spaces
+          --package remark-lint-blockquote-indentation
+          --package remark-lint-no-consecutive-blank-lines
+          --package remark-lint-fenced-code-flag
+          --package remark-lint-fenced-code-marker
+          --package remark-lint-no-shell-dollars
+          --package remark-lint-code-block-style
+          --package remark-lint-heading-increment
+          --package remark-lint-no-multiple-toplevel-headings
+          --package remark-lint-maximum-heading-length
+          --package remark-lint-heading-style
+          --package remark-lint-no-shortcut-reference-link
+          --package remark-lint-list-item-bullet-indent
+          --package remark-lint-ordered-list-marker-style
+          --package remark-lint-ordered-list-marker-value
+          --package remark-lint-checkbox-character-style
+          --package remark-lint-unordered-list-marker-style
+          --package remark-lint-list-item-indent
+          --package remark-lint-table-pipes
+          --package remark-lint-no-literal-urls
+          -- remark --frail .
