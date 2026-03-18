@@ -3,11 +3,11 @@
 ## Table of Contents
 
 - [How to Differentiate STAC Files](#how-to-differentiate-stac-files)
-
+- [Mixing STAC Versions](#mixing-stac-versions)
 
 ## How to Differentiate STAC Files
 
-Any tool that crawls a STAC implementation or encounters a STAC file in the wild needs a clear way to determine if it is an Item, 
+Any tool that crawls a STAC implementation or encounters a STAC file in the wild needs a clear way to determine if it is an Item,
 Collection or Catalog. As of 1.0.0 this is done primarily
 with the `type` field, and secondarily in Items with `stac_version`, or optionally with the `rel` of the link to it.
 
@@ -33,3 +33,10 @@ and [Asset media types](https://github.com/radiantearth/stac-spec/blob/master/co
 In versions of STAC prior to 1.0 the process was a bit more complicated, as there was no `type` field for catalogs and collections.
 See [this issue comment](https://github.com/radiantearth/stac-spec/issues/889#issuecomment-684529444) for a heuristic that works
 for older STAC versions.
+
+## Mixing STAC Versions
+
+Although it is not recommended to mix STAC versions, it is allowed. Sometimes mixed STAC Versions are unavoidable
+when multiple catalogs or collections from different sources are combined into a single Catalog.
+
+Client and Server developers should be aware of this use case.
