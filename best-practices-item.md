@@ -108,7 +108,6 @@ use cases.
 
 ## Representing Vector Layers in STAC
 
-<<<<<<< HEAD
 Many implementors are tempted to use STAC to describe vector layers, putting a [GeoParquet](https://geoparquet.org/) or 
 [FlatGeobuf](https://flatgeobuf.org/) or Shapefile or [GeoPackage](https://www.geopackage.org/)
 file as the asset. This has proven to be useful as long as the asset represents a group of features rather
