@@ -248,9 +248,9 @@ graph TD
 
 Implementors of STAC are highly recommended to be quite liberal with their `links`, and to use the `rel` field (in conjunction
 with the `type` field) to communicate the structure and content of related entities. While each STAC spec describes some of the
-'custom' relations STAC has set, the ideal is to reuse official [IANA Link Relation
-Types](https://www.iana.org/assignments/link-relations/link-relations.xhtml) as much as possible. The following table describes
-a number of the common official relations that are used in production STAC implementations.
+'*custom*' relations STAC has set, the ideal is to reuse official
+[IANA Link Relation Types](https://www.iana.org/assignments/link-relations/link-relations.xhtml) as much as possible.
+The following table describes a number of the common official relations that are used in production STAC implementations.
 
 | Type         | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -262,9 +262,16 @@ a number of the common official relations that are used in production STAC imple
 | preview      | Refers to a resource that serves as a preview (see [RFC 6903, sec. 3](https://tools.ietf.org/html/rfc6903#section-3)), usually a lower resolution thumbnail. In STAC this would usually be the same URL as the [thumbnail](./best-practices-asset-and-link.md#list-of-asset-roles) asset, but adding it as a link in addition enables OGC API clients that can't read assets to make use of it. It also adds support for thumbnails to STAC Catalogs as they can't list assets. |
 | derived_from | URL to a STAC Entity that was used as input data in the creation of this Entity.                                                                                                                                                                                                                                                                                                                                                                                                |
 
+These `links` would be supplemented by the applicable relationships between STAC entities as described in
+[Links Hierarchical Relations](https://github.com/radiantearth/stac-spec/blob/master/commons/links.md#hierarchical-relations).
+For example, every Item should have a `parent` link to its parent Catalog or Collection,
+and a `root` link to the root Catalog, but may as well introduce further hierarchical relationships
+using the above `rel` definitions to better represent the sematic relationships between entities.
+
 Being liberal with the `links` also means that it's ok to have repeated links with the same `href`. For example the
 `parent` and `root` relation types will point at the same file when the child is directly below the root, and it is
-recommended to include both.
+recommended to include both. Similarly, links can be repeated to refer to different encodings of the same resource,
+such as in the case of the `alternate` relation type.
 
 ### Derived from relation (`derived_from`)
 
@@ -278,8 +285,10 @@ structure that can be used as a jumping off point for more experiments in proven
 In the Item and Collection STAC JSON, versions and deprecation can be indicated with the
 [Versioning Indicators Extension](https://github.com/stac-extensions/version).
 
-The [Items and Collections API Version Extension](https://github.com/stac-extensions/version/) provides endpoints and
-semantics for keeping and accessing previous versions of Collections and Items. The same semantics can be used in static
+The [Items and Collections API Version Extension](https://github.com/stac-extensions/version/) provides endpoints,
+field properties (such as `version` and `deprecated`) and  linking semantics
+(relation types such as `predecesor-version`, `successor-version`, etc.)
+for keeping and accessing previous versions of Collections and Items. The same semantics can be used in static
 catalogs to preserve previous versions of the documents and link them together.
 
 In order to achieve this, the static catalog must make sure that for every record created, a copy of the record is also
