@@ -285,11 +285,8 @@ structure that can be used as a jumping off point for more experiments in proven
 In the Item and Collection STAC JSON, versions and deprecation can be indicated with the
 [Versioning Indicators Extension](https://github.com/stac-extensions/version).
 
-The [Items and Collections API Version Extension](https://github.com/stac-extensions/version/) provides endpoints,
-field properties (such as `version` and `deprecated`) and  linking semantics
-(relation types such as `predecesor-version`, `successor-version`, etc.)
-for keeping and accessing previous versions of Collections and Items. The same semantics can be used in static
-catalogs to preserve previous versions of the documents and link them together.
+The [Version Extension](https://github.com/stac-extensions/version/) provides field properties and linking
+semantics through relation types for keeping and accessing previous versions of Collections and Items.
 
 In order to achieve this, the static catalog must make sure that for every record created, a copy of the record is also
 created in a separate location and it is named with the version id adopted by the catalog. See the
