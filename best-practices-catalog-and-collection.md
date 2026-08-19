@@ -264,9 +264,6 @@ The following table describes a number of the common official relations that are
 
 These `links` would be supplemented by the applicable relationships between STAC entities as described in
 [Links Hierarchical Relations](https://github.com/radiantearth/stac-spec/blob/master/commons/links.md#hierarchical-relations).
-For example, every Item should have a `parent` link to its parent Catalog or Collection,
-and a `root` link to the root Catalog, but may as well introduce further hierarchical relationships
-using the above `rel` definitions to better represent the sematic relationships between entities.
 
 Being liberal with the `links` also means that it's ok to have repeated links with the same `href`. For example the
 `parent` and `root` relation types will point at the same file when the child is directly below the root, and it is
