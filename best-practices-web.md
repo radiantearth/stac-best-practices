@@ -1,7 +1,8 @@
-# STAC Web Best Practices
+# STAC Web Best Practices <!-- omit in toc -->
 
 ## Table of Contents
 
+- [Table of Contents](#table-of-contents)
 - [Enable Cross-origin resource sharing (CORS)](#enable-cross-origin-resource-sharing-cors)
 - [STAC on the Web](#stac-on-the-web)
   - [Schema.org, JSON-LD, DCAT, microformats, etc](#schemaorg-json-ld-dcat-microformats-etc)
@@ -109,9 +110,8 @@ If the document was retrieved after a redirect, this is the URL that was redirec
 (see [RFC 3986, section 5.1.3](https://datatracker.ietf.org/doc/html/rfc3986#section-5.1.3)).
 If neither of them is available, relative links can usually not be resolved and the behavior is undefined.
 
-Many clients, including pystac and STAC Browser, always use the URL from which they requested the document as the base URL.
+Many clients use the URL from which they retrieved the document as the base URL, even if a `self` link is provided.
 This is the default in RFC 3986, which also applies to OGC API standards as they don't define a base URL.
-Note that these clients use the requested URL even if the server redirected the request to another URL.
 Both approaches only lead to the same result if the `self` link is the URL under which the document is served.
 Therefore, the `self` link should always contain the URL from which the document can be retrieved.
 If the document has a preferred location that differs from this URL,
@@ -168,8 +168,8 @@ To avoid issues in APIs, it is recommended to:
 
 - use absolute URLs in all links (see [dynamic catalogs](best-practices-catalog-and-collection.md#should-you-use-relative-or-absolute-links)),
 - if a server also accepts paths with a trailing slash,
-  only use absolute URLs and relative URLs that start with a slash in the response
-  (redirecting to the path without the trailing slash is not enough,
-  as some clients resolve relative URLs against the URL they requested), and
+  either redirect them to the path without the trailing slash
+  (relative URLs are then resolved against the URL that was redirected to),
+  or only use absolute URLs and relative URLs that start with a slash in the response, and
 - provide a `self` link in each STAC entity, including the Items in an ItemCollection,
   so that clients never need to construct URLs themselves.
