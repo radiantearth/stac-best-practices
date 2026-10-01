@@ -1,8 +1,7 @@
 # STAC Web Best Practices <!-- omit in toc -->
 
-## Table of Contents
+## Table of Contents <!-- omit in toc -->
 
-- [Table of Contents](#table-of-contents)
 - [Enable Cross-origin resource sharing (CORS)](#enable-cross-origin-resource-sharing-cors)
 - [STAC on the Web](#stac-on-the-web)
   - [Schema.org, JSON-LD, DCAT, microformats, etc](#schemaorg-json-ld-dcat-microformats-etc)
@@ -112,8 +111,8 @@ If neither of them is available, relative links can usually not be resolved and 
 
 Many clients use the URL from which they retrieved the document as the base URL, even if a `self` link is provided.
 This is the default in RFC 3986, which also applies to OGC API standards as they don't define a base URL.
-Both approaches only lead to the same result if the `self` link is the URL under which the document is served.
-Therefore, the `self` link should always contain the URL from which the document can be retrieved.
+The two approaches can produce different results if the `self` link differs from the URL under which the document is served.
+To guarantee consistent resolution for every relative reference, the `self` link should match the retrieval URL.
 If the document has a preferred location that differs from this URL,
 for example for a copy of a catalog on a mirror or for an API response that was generated from a static catalog,
 provide the preferred location in a link with the relation type
@@ -124,7 +123,7 @@ Having or not having a trailing slash is significant (except if no path componen
 Without a trailing slash, the last path component is identified as a "file" and will be removed while resolving URLs.
 This means that if the trailing slash is missing for a folder,
 a relative link would need to include the last path component again to resolve correctly (see example 4).
-Relative URLs that start with a slash only depend on the scheme and host of the base URL,
+Root-relative URLs that start with a single slash depend on the scheme and authority of the base URL,
 not on its path (see examples 10 and 11).
 They break if the catalog is moved to another path, for example behind a proxy.
 
