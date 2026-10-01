@@ -1,6 +1,6 @@
-# STAC Web Best Practices
+# STAC Web Best Practices <!-- omit in toc -->
 
-## Table of Contents
+## Table of Contents <!-- omit in toc -->
 
 - [Enable Cross-origin resource sharing (CORS)](#enable-cross-origin-resource-sharing-cors)
 - [STAC on the Web](#stac-on-the-web)
@@ -8,6 +8,7 @@
   - [Deploying STAC Browser](#deploying-stac-browser)
 - [Requester Pays](#requester-pays)
 - [Consistent URIs](#consistent-uris)
+  - [Documents available under multiple URLs](#documents-available-under-multiple-urls)
 
 ## Enable Cross-origin resource sharing (CORS)
 
@@ -103,29 +104,71 @@ For data providers using STAC with requester pays buckets, there are two main re
 Links in STAC can be [absolute or relative](best-practices-catalog-and-collection.md#use-of-links).
 
 Relative links must be resolved against a base URL, which is the absolute URI given in the link with the relation type `self`.
-If a `self` link is not provided, the absolute URI of the resource can be used as the base URL.
+If a `self` link is not provided, the URL from which the document was retrieved is used as the base URL.
+If the document was retrieved after a redirect, this is the URL that was redirected to
+(see [RFC 3986, section 5.1.3](https://datatracker.ietf.org/doc/html/rfc3986#section-5.1.3)).
 If neither of them is available, relative links can usually not be resolved and the behavior is undefined.
+
+Many clients use the URL from which they retrieved the document as the base URL, even if a `self` link is provided.
+This is the default in RFC 3986, which also applies to OGC API standards as they don't define a base URL.
+The two approaches can produce different results if the `self` link differs from the URL under which the document is served.
+To guarantee consistent resolution for every relative reference, the `self` link should match the retrieval URL.
+If the document has a preferred location that differs from this URL,
+for example for a copy of a catalog on a mirror or for an API response that was generated from a static catalog,
+provide the preferred location in a link with the relation type
+[`canonical`](best-practices-catalog-and-collection.md#using-relation-types) instead of in the `self` link.
 
 To resolve relative URIs, the base URIs must be precise and consistent.
 Having or not having a trailing slash is significant (except if no path component is provided in a URL, see example 8).
 Without a trailing slash, the last path component is identified as a "file" and will be removed while resolving URLs.
 This means that if the trailing slash is missing for a folder,
 a relative link would need to include the last path component again to resolve correctly (see example 4).
+Root-relative URLs that start with a single slash depend on the scheme and authority of the base URL,
+not on its path (see examples 10 and 11).
+They break if the catalog is moved to another path, for example behind a proxy.
 
-To avoid issues it is recommended to consistently add a slash at the end of the URL if it doesn't point to a file.
+In static catalogs, it is recommended to link to files (e.g., `catalog.json`) instead of folders,
+and to consistently add a slash at the end of a URL if it points to a folder.
 
 **Examples:**
 
-| # | Base URL                                  | Relative URL       | Resolved URL                                  |
-| - | ----------------------------------------- | ------------------ | --------------------------------------------- |
-| 1 | `https://example.com/folder/catalog.json` | `item.json`        | `https://example.com/folder/item.json`        |
-| 2 | `https://example.com/folder`              | `item.json`        | `https://example.com/item.json`               |
-| 3 | `https://example.com/folder/`             | `item.json`        | `https://example.com/folder/item.json`        |
-| 4 | `https://example.com/folder`              | `folder/item.json` | `https://example.com/folder/item.json`        |
-| 5 | `https://example.com/folder/`             | `folder/item.json` | `https://example.com/folder/folder/item.json` |
-| 6 | `https://example.com/another/folder`      | `../item.json`     | `https://example.com/item.json`               |
-| 7 | `https://example.com/another/folder/`     | `../item.json`     | `https://example.com/another/item.json`       |
-| 8 | `https://example.com`                     | `folder/item.json` | `https://example.com/folder/item.json`        |
-| 9 | `https://example.com/`                    | `folder/item.json` | `https://example.com/folder/item.json`        |
+| #  | Base URL                                  | Relative URL        | Resolved URL                                  |
+| -- | ----------------------------------------- | ------------------- | --------------------------------------------- |
+| 1  | `https://example.com/folder/catalog.json` | `item.json`         | `https://example.com/folder/item.json`        |
+| 2  | `https://example.com/folder`              | `item.json`         | `https://example.com/item.json`               |
+| 3  | `https://example.com/folder/`             | `item.json`         | `https://example.com/folder/item.json`        |
+| 4  | `https://example.com/folder`              | `folder/item.json`  | `https://example.com/folder/item.json`        |
+| 5  | `https://example.com/folder/`             | `folder/item.json`  | `https://example.com/folder/folder/item.json` |
+| 6  | `https://example.com/another/folder`      | `../item.json`      | `https://example.com/item.json`               |
+| 7  | `https://example.com/another/folder/`     | `../item.json`      | `https://example.com/another/item.json`       |
+| 8  | `https://example.com`                     | `folder/item.json`  | `https://example.com/folder/item.json`        |
+| 9  | `https://example.com/`                    | `folder/item.json`  | `https://example.com/folder/item.json`        |
+| 10 | `https://example.com/another/folder`      | `/folder/item.json` | `https://example.com/folder/item.json`        |
+| 11 | `https://example.com/another/folder/`     | `/folder/item.json` | `https://example.com/folder/item.json`        |
 
 The relative URLs `folder/item.json` and `./folder/item.json` are equivalent.
+
+### Documents available under multiple URLs
+
+A document that a server returns both with and without a trailing slash,
+for example at `https://example.com/stac/test` and at `https://example.com/stac/test/`,
+cannot contain relative URLs of the usual form that resolve correctly for both requests
+if clients use the URL from which the document was retrieved as the base URL:
+
+| Relative URL       | Retrieved from `https://example.com/stac/test` | Retrieved from `https://example.com/stac/test/`    |
+| ------------------ | ---------------------------------------------- | -------------------------------------------------- |
+| `items`            | `https://example.com/stac/items` (wrong)       | `https://example.com/stac/test/items`              |
+| `test/items`       | `https://example.com/stac/test/items`          | `https://example.com/stac/test/test/items` (wrong) |
+| `/stac/test/items` | `https://example.com/stac/test/items`          | `https://example.com/stac/test/items`              |
+
+This mostly affects APIs. STAC API and OGC API - Features define paths without a trailing slash
+(e.g., `/collections/{collectionId}`), but many servers also accept the same path with a trailing slash.
+To avoid issues in APIs, it is recommended to:
+
+- use absolute URLs in all links (see [dynamic catalogs](best-practices-catalog-and-collection.md#should-you-use-relative-or-absolute-links)),
+- if a server also accepts paths with a trailing slash,
+  either redirect them to the path without the trailing slash
+  (relative URLs are then resolved against the URL that was redirected to),
+  or only use absolute URLs and relative URLs that start with a slash in the response, and
+- provide a `self` link in each STAC entity, including the Items in an ItemCollection,
+  so that clients never need to construct URLs themselves.
