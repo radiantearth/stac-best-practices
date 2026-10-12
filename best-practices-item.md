@@ -6,6 +6,7 @@
 - [Searchable Identifiers](#searchable-identifiers)
 - [Field selection and Metadata Linking](#field-selection-and-metadata-linking)
 - [Datetime selection](#datetime-selection)
+  - [Placeholder datetimes](#placeholder-datetimes)
 - [Unlocated Items](#unlocated-items)
 - [Representing Vector Layers in STAC](#representing-vector-layers-in-stac)
 
@@ -65,6 +66,24 @@ a MODIS 8 day composite image can define the `datetime` to be the nominal date h
 might choose to have `datetime` be the start. The key is to put in a date and time that will be useful for search, as that is
 the focus of STAC. If `datetime` is set to `null` then it is strongly recommended to use it in conjunction with an extension
 that explains why it should not be set for that type of data.
+
+### Placeholder datetimes
+
+It is discouraged to use "special" datetimes such as `0001-01-01T00:00:00Z` or `9999-12-31T23:59:59Z`
+(or any other arbitrary date far in the past or future) as placeholders,
+for example to express open date ranges or to fill in temporal information that is unknown or does not exist.
+These values cannot be distinguished from real dates, so clients will show them to users as actual dates,
+temporal extents and searches based on them are misleading,
+and some software can't handle these extreme values properly (e.g. due to overflows or limited date ranges).
+
+Instead:
+
+- Open date ranges are not supported yet
+  (see [stac-spec#1161](https://github.com/radiantearth/stac-spec/issues/1161)).
+  Provide the best known (or estimated) times and update the Item once more accurate times are known,
+  e.g. set `end_datetime` to the time of the last update for an ongoing time series.
+- Resources without temporal information are not a good fit for STAC Items.
+  [OGC API - Records](https://github.com/opengeospatial/ogcapi-records) may be an alternative.
 
 ## Unlocated Items
 
